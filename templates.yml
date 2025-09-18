@@ -1,0 +1,108 @@
+- category: Journal templates
+  description: Templates for general science and social science journals.
+  extensions:
+    - name: Annual Reviews
+      link: https://github.com/christopherkenny/annual-reviews
+      image: https://raw.githubusercontent.com/christopherkenny/annual-reviews/main/template_1.png
+      type: Quarto
+      badges: ["Quarto", "LaTeX"]
+      description: For Annual Reviews drafts.
+    - name: APSR
+      link: https://github.com/christopherkenny/apsr
+      image: https://raw.githubusercontent.com/christopherkenny/apsr/main/template_1.png
+      type: Quarto
+      description: For the American Political Science Review submissions.
+      badges: ["Quarto", "LaTeX"]
+    - name: Cambridge Medium
+      link: https://github.com/christopherkenny/cambridge-medium
+      image: https://raw.githubusercontent.com/christopherkenny/cambridge-medium/main/template_1.png
+      type: Quarto
+      description: For Cambridge Medium journal submissions, including PA, PSRM, BJPS, SPQ, and more.
+      badges: ["Quarto", "LaTeX"]
+    - name: Nature
+      link: https://github.com/christopherkenny/nature
+      image: https://raw.githubusercontent.com/christopherkenny/nature/main/template_1.png
+      type: Quarto
+      description: For Springer Nature journal submissions.
+      badges: ["Quarto", "LaTeX"]
+    - name: PNAS
+      link: https://github.com/christopherkenny/pnas
+      image: https://raw.githubusercontent.com/christopherkenny/pnas/main/template_1.png
+      type: Quarto
+      description: For PNAS submissions.
+      badges: ["Quarto", "LaTeX"]
+    - name: PNAS Supporting Information
+      link: https://github.com/christopherkenny/pnas-si
+      image: https://raw.githubusercontent.com/christopherkenny/pnas-si/main/template_1.png
+      type: Quarto
+      description: For PNAS SI (appendices) submissions.
+      badges: ["Quarto", "LaTeX"]
+    - name: Scientific Data
+      link: https://github.com/christopherkenny/scientific-data
+      image: https://raw.githubusercontent.com/christopherkenny/scientific-data/main/template_1.png
+      type: Quarto
+      description: For Scientific Data "Data Descriptors" submissions.
+      badges: ["Quarto", "LaTeX"]
+    - name: Perspectives
+      link: https://github.com/christopherkenny/perspectives
+      image: https://raw.githubusercontent.com/christopherkenny/perspectives/main/template_1.png
+      type: Quarto
+      description: For Perspectives on Politics submissions.
+      badges: ["Quarto", "LaTeX"]
+    - name: Oxford University Press
+      link: https://github.com/christopherkenny/oup
+      image: https://raw.githubusercontent.com/christopherkenny/oup/main/template_1.png
+      type: Quarto
+      description: For submissions to OUP journals.
+      badges: ["Quarto", "LaTeX"]
+    - name: now Publishers
+      link: https://github.com/christopherkenny/now
+      image: https://raw.githubusercontent.com/christopherkenny/now/main/template_1.png
+      type: Quarto
+      description: For submissions to now Publishers journals, including QJPS.
+      badges: ["Quarto", "LaTeX"]
+- category: Other templates
+  description: Formats for non-journal documents.
+  extensions:
+    - name: tufte
+      link: https://github.com/christopherkenny/tufte
+      image: https://raw.githubusercontent.com/christopherkenny/tufte/main/template_1.png
+      type: Quarto
+      description: For Tufte-style documents in Quarto with a Typst backend.
+      badges: ["Quarto", "Typst"]
+    - name: ctk-article
+      link: https://github.com/christopherkenny/ctk-article
+      image: https://raw.githubusercontent.com/christopherkenny/ctk-article/main/template_1.png
+      type: Quarto
+      description: A general purpose template for preprints and submissions using Quarto and Typst.
+      badges: ["Quarto", "Typst"]
+    - name: ctk-memo
+      link: https://github.com/christopherkenny/ctk-memo
+      image: https://raw.githubusercontent.com/christopherkenny/ctk-memo/main/template_1.png
+      type: Quarto
+      description: For memos in Quarto with a Typst backend.
+      badges: ["Quarto", "Typst"]
+    - name: ctk-syllabus
+      link: https://github.com/christopherkenny/ctk-syllabus
+      image: https://raw.githubusercontent.com/christopherkenny/ctk-syllabus/main/template_1.png
+      type: Quarto
+      description: For syllabi in Quarto with a Typst backend.
+      badges: ["Quarto", "Typst"]
+    - name: cv
+      link: https://github.com/christopherkenny/quarto-cv
+      image: https://raw.githubusercontent.com/christopherkenny/quarto-cv/main/template_1.png
+      type: Quarto
+      description: For a shortcode + BibTeX powered CV in Quarto with a Typst backend.
+      badges: ["Quarto", "Typst"]
+    - name: projector
+      link: https://github.com/christopherkenny/projector
+      image: https://raw.githubusercontent.com/christopherkenny/projector/main/example.gif
+      type: Quarto
+      description: Make slides in Quarto powered by Typst's Polylux.
+      badges: ["Quarto", "Typst"]
+    - name: harvard-diss
+      link: https://github.com/christopherkenny/harvard-diss
+      image: https://raw.githubusercontent.com/christopherkenny/harvard-diss/main/template_1.png
+      type: Quarto
+      description: Write a Harvard GSAS Dissertation in Quarto with a Typst backend.
+      badges: ["Quarto", "Typst"]
