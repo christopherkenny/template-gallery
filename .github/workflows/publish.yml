@@ -42,3 +42,10 @@ jobs:
         with:
           #target: gh-pages
           path: ctk-article
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctk-article-pdf
+          path: ctk-article/ctk-article.pdf
+          retention-days: 30
