@@ -37,11 +37,15 @@ jobs:
         with:
           tinytex: true
 
-      - name: Render documents
+      - name: Render ctk-article
         uses: quarto-dev/quarto-actions/render@v2
         with:
-          #target: gh-pages
           path: ctk-article
+
+      - name: Render ctk-memo
+        uses: quarto-dev/quarto-actions/render@v2
+        with:
+          path: ctk-memo
 
       - name: Upload all PDF artifacts
         uses: actions/upload-artifact@v4
