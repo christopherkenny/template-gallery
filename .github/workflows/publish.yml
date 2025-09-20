@@ -37,15 +37,15 @@ jobs:
         with:
           tinytex: true
 
-      - name: Just render #Publish to GitHub Pages (and render)
+      - name: Render documents
         uses: quarto-dev/quarto-actions/render@v2
         with:
           #target: gh-pages
           path: ctk-article
 
-      - name: Upload PDF artifact
+      - name: Upload all PDF artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ctk-article-pdf
-          path: ctk-article/ctk-article.pdf
+          name: all-pdfs
+          path: "**/*.pdf"
           retention-days: 30
