@@ -1,0 +1,1 @@
+Sitemap: https://christopherkenny.github.io/template-gallery/sitemap.xml
