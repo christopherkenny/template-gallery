@@ -38,14 +38,28 @@ jobs:
           tinytex: true
 
       - name: Render ctk-article
+        if: ${{ !cancelled() }}
         uses: quarto-dev/quarto-actions/render@v2
         with:
           path: ctk-article
 
       - name: Render ctk-memo
+        if: ${{ !cancelled() }}
         uses: quarto-dev/quarto-actions/render@v2
         with:
           path: ctk-memo
+
+      - name: Render ctk-syllabus
+        if: ${{ !cancelled() }}
+        uses: quarto-dev/quarto-actions/render@v2
+        with:
+          path: ctk-syllabus
+
+      - name: Render tufte
+        if: ${{ !cancelled() }}
+        uses: quarto-dev/quarto-actions/render@v2
+        with:
+          path: tufte
 
       - name: Upload all PDF artifacts
         uses: actions/upload-artifact@v4
