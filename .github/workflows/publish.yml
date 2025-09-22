@@ -61,9 +61,16 @@ jobs:
         with:
           path: tufte
 
-      - name: Upload all PDF artifacts
-        uses: actions/upload-artifact@v4
+      - name: Copy PDFs to website assets
+        run: |
+          mkdir -p assets/pdfs
+          find . -name "*.pdf" -type f -exec cp {} assets/pdfs/ \;
+          echo "Available PDFs:"
+          ls -la assets/pdfs/ || echo "No PDFs found"
+
+      - name: Render and Publish Website
+        uses: quarto-dev/quarto-actions/publish@v2
         with:
-          name: all-pdfs
-          path: "**/*.pdf"
-          retention-days: 30
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

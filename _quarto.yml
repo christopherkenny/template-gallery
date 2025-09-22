@@ -3,3 +3,6 @@ project:
 
 website:
   title: "Quarto Template Gallery"
+
+resources:
+  - "assets/pdfs/*"
