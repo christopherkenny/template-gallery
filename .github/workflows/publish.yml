@@ -61,23 +61,9 @@ jobs:
         with:
           path: tufte
 
-      - name: Copy PDFs to website assets
-        run: |
-          mkdir -p assets/pdfs
-          find . -name "*.pdf" -type f -exec cp {} assets/pdfs/ \;
-          echo "Available PDFs:"
-          ls -la assets/pdfs/ || echo "No PDFs found"
-
       - name: Render and Publish Website
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Copy PDFs to published site
-        run: |
-          mkdir -p _site/assets/pdfs
-          find . -path "./_site" -prune -o -name "*.pdf" -type f -print -exec cp {} _site/assets/pdfs/ \;
-          echo "PDFs copied to site:"
-          ls -la _site/assets/pdfs/ || echo "No PDFs found"
