@@ -61,6 +61,12 @@ jobs:
         with:
           path: tufte
 
+      - name: Render ctk-legal
+        if: ${{ !cancelled() }}
+        uses: quarto-dev/quarto-actions/render@v2
+        with:
+          path: ctk-legal
+
       - name: Render and Publish Website
         uses: quarto-dev/quarto-actions/publish@v2
         with:
