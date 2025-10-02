@@ -32,7 +32,7 @@ jobs:
 
       - name: Install Google Fonts
         run: |
-          wget -O Spectral.zip https://fonts.google.com/download?family=Fira%20Sans
+          wget -O Spectral.zip https://fonts.google.com/download?family=Spectral
           unzip -d spectral/ Spectral.zip
           mv spectral /usr/share/fonts/
           fc-cache -fv
