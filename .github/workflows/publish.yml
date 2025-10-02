@@ -37,17 +37,27 @@ jobs:
           path: fonts
           key: spectral-v1
 
-      - name: Download Spectral
+      - name: Download Spectral Font
         if: steps.cache-fonts.outputs.cache-hit != 'true'
         run: |
-          mkdir -p fonts
-          wget -O fonts/Spectral.zip https://fonts.google.com/download?family=Spectral
-          unzip -d fonts/spectral/ fonts/Spectral.zip
+          mkdir -p fonts/spectral
+          # Download TTF files directly from GitHub
+          base_url="https://raw.githubusercontent.com/google/fonts/main/ofl/spectral"
 
-      - name: Install fonts system-wide
+          wget -P fonts/spectral/ "$base_url/Spectral-ExtraLight.ttf"
+          wget -P fonts/spectral/ "$base_url/Spectral-Light.ttf"
+          wget -P fonts/spectral/ "$base_url/Spectral-Regular.ttf"
+          wget -P fonts/spectral/ "$base_url/Spectral-Medium.ttf"
+          wget -P fonts/spectral/ "$base_url/Spectral-SemiBold.ttf"
+          wget -P fonts/spectral/ "$base_url/Spectral-Bold.ttf"
+          wget -P fonts/spectral/ "$base_url/Spectral-ExtraBold.ttf"
+
+      - name: Install Spectral system-wide
         run: |
-          sudo mv fonts/spectral /usr/share/fonts/
+          sudo mkdir -p /usr/share/fonts/truetype/spectral
+          sudo cp fonts/spectral/*.ttf /usr/share/fonts/truetype/spectral/
           sudo fc-cache -fv
+          fc-list | grep -i spectral
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
