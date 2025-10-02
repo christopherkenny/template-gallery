@@ -30,12 +30,24 @@ jobs:
             any::knitr
             any::rmarkdown
 
-      - name: Install Google Fonts
+      - name: Cache fonts
+        id: cache-fonts
+        uses: actions/cache@v3
+        with:
+          path: fonts
+          key: spectral-v1
+
+      - name: Download Spectral
+        if: steps.cache-fonts.outputs.cache-hit != 'true'
         run: |
-          wget -O Spectral.zip https://fonts.google.com/download?family=Spectral
-          unzip -d spectral/ Spectral.zip
-          mv spectral /usr/share/fonts/
-          fc-cache -fv
+          mkdir -p fonts
+          wget -O fonts/Spectral.zip https://fonts.google.com/download?family=Spectral
+          unzip -d fonts/spectral/ fonts/Spectral.zip
+
+      - name: Install fonts system-wide
+        run: |
+          sudo mv fonts/spectral /usr/share/fonts/
+          sudo fc-cache -fv
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
