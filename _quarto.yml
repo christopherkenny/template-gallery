@@ -1,8 +1,7 @@
 project:
   type: website
+  resources:
+    - "assets/pdfs/*"
 
 website:
   title: "Quarto Template Gallery"
-
-resources:
-  - "assets/pdfs/*"
