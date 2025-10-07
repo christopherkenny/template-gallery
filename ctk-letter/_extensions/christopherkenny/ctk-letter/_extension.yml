@@ -1,0 +1,17 @@
+title: ctk-letter
+author: Christopher T. Kenny
+version: 1.1.0
+quarto-required: ">=1.8.18"
+contributes:
+  formats:
+    typst:
+      template-partials:
+        - typst-template.typ
+        - typst-show.typ
+        - page.typ
+      date-format: "MMMM D, YYYY"
+      mainfont:
+        - "Spectral"
+      linkcolor: "#A41034"
+      fontsize: 11pt
+      linestretch: 0.9
