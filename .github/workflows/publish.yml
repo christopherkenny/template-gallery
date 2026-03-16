@@ -79,6 +79,7 @@ jobs:
           packages: |
             any::knitr
             any::rmarkdown
+            any::jsonlite
 
       - name: Cache fonts
         id: cache-fonts
@@ -152,28 +153,7 @@ jobs:
         if: matrix.mode == 'external-template' && matrix.extra_files != ''
         shell: bash
         run: |
-          python_files='${{ toJson(matrix.extra_files) }}'
-          python - <<'PY'
-          import json
-          import os
-          import urllib.request
-
-          files = json.loads(os.environ["EXTRA_FILES_JSON"])
-          slug = os.environ["MATRIX_SLUG"]
-          repo = os.environ["MATRIX_REPO"]
-          path = os.environ["MATRIX_PATH"]
-
-          owner_repo = repo.removeprefix("https://github.com/")
-          base = f"https://raw.githubusercontent.com/{owner_repo}/main"
-          target_dir = os.path.join("_template", slug, path)
-
-          for rel in files:
-            url = f"{base}/{rel}"
-            dest = os.path.join(target_dir, rel)
-            os.makedirs(os.path.dirname(dest), exist_ok=True)
-            urllib.request.urlretrieve(url, dest)
-            print(f"downloaded {url} -> {dest}")
-          PY
+          Rscript -e "files <- jsonlite::fromJSON(Sys.getenv('EXTRA_FILES_JSON')); if (is.character(files) && length(files) == 1 && !startsWith(Sys.getenv('EXTRA_FILES_JSON'), '[')) files <- c(files); repo <- sub('^https://github.com/', '', Sys.getenv('MATRIX_REPO')); target_dir <- file.path('_template', Sys.getenv('MATRIX_SLUG'), Sys.getenv('MATRIX_PATH')); dir.create(target_dir, recursive = TRUE, showWarnings = FALSE); for (rel in files) { url <- sprintf('https://raw.githubusercontent.com/%s/main/%s', repo, rel); dest <- file.path(target_dir, rel); dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE); download.file(url, destfile = dest, mode = 'wb', quiet = FALSE); cat(sprintf('downloaded %s -> %s\\n', url, dest)); }"
         env:
           EXTRA_FILES_JSON: ${{ toJson(matrix.extra_files) }}
           MATRIX_SLUG: ${{ matrix.slug }}

@@ -27,7 +27,7 @@ matrix <- list(include = lapply(entries, function(entry) {
     path = normalize_string(entry$ci$path, "."),
     render_target = normalize_string(entry$ci$render_target, "project"),
     input = normalize_string(entry$ci$input),
-    extra_files = as.character(unlist(entry$ci$extra_files %||% character())),
+    extra_files = I(as.character(unlist(entry$ci$extra_files %||% character()))),
     output_pdf = normalize_string(entry$ci$output_pdf),
     artifact_pdf = normalize_string(entry$ci$artifact_pdf)
   )
