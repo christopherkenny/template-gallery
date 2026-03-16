@@ -6,20 +6,28 @@ suppressPackageStartupMessages(library(jsonlite))
 
 manifest <- yaml::read_yaml(manifest_path)
 
+normalize_string <- function(x, default = "") {
+  if (is.null(x) || length(x) == 0 || (length(x) == 1 && is.na(x))) {
+    return(default)
+  }
+  as.character(x)
+}
+
 entries <- Filter(function(entry) {
-  entry$ci$mode %in% c("local", "external") && isTRUE(entry$ci$enabled)
+  entry$ci$mode %in% c("local", "external", "external-template") && isTRUE(entry$ci$enabled)
 }, manifest$entries)
 
 matrix <- list(include = lapply(entries, function(entry) {
   list(
-    slug = entry$slug,
-    name = entry$name,
-    mode = entry$ci$mode,
-    repo = entry$repo,
-    path = entry$ci$path,
-    input = entry$ci$input,
-    output_pdf = entry$ci$output_pdf,
-    artifact_pdf = entry$ci$artifact_pdf
+    slug = normalize_string(entry$slug),
+    name = normalize_string(entry$name),
+    mode = normalize_string(entry$ci$mode),
+    repo = normalize_string(entry$repo),
+    install_target = normalize_string(entry$ci$install_target),
+    path = normalize_string(entry$ci$path, "."),
+    input = normalize_string(entry$ci$input),
+    output_pdf = normalize_string(entry$ci$output_pdf),
+    artifact_pdf = normalize_string(entry$ci$artifact_pdf)
   )
 }))
 

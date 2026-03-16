@@ -173,9 +173,10 @@ ctk-invoice:
   kind: template
   engine: typst
   ci:
-    mode: external
+    mode: external-template
     enabled: true
-    path: .
+    install_target: christopherkenny/ctk-invoice
+    path: "."
     input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf

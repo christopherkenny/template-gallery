@@ -82,7 +82,7 @@ jobs:
 
       - name: Cache fonts
         id: cache-fonts
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: fonts
           key: spectral-v1
@@ -132,6 +132,22 @@ jobs:
         working-directory: _external/${{ matrix.slug }}/${{ matrix.path }}
         run: quarto render .
 
+      - name: Materialize external template
+        if: matrix.mode == 'external-template'
+        shell: bash
+        run: |
+          mkdir -p "_template/${{ matrix.slug }}"
+          cd "_template/${{ matrix.slug }}"
+          quarto use template "${{ matrix.install_target }}" --no-prompt
+
+      - name: Render template example
+        if: matrix.mode == 'external-template'
+        id: render-template
+        continue-on-error: true
+        shell: bash
+        working-directory: _template/${{ matrix.slug }}/${{ matrix.path }}
+        run: quarto render "${{ matrix.input }}"
+
       - name: Collect build outputs
         if: always()
         shell: bash
@@ -141,6 +157,8 @@ jobs:
           render_outcome="${{ steps.render.outcome }}"
           if [ "${{ matrix.mode }}" = "external" ]; then
             render_outcome="${{ steps.render-external.outcome }}"
+          elif [ "${{ matrix.mode }}" = "external-template" ]; then
+            render_outcome="${{ steps.render-template.outcome }}"
           fi
 
           if [ "${render_outcome}" = "success" ]; then
@@ -152,6 +170,8 @@ jobs:
           pdf_path="${{ matrix.path }}/${{ matrix.output_pdf }}"
           if [ "${{ matrix.mode }}" = "external" ]; then
             pdf_path="_external/${{ matrix.slug }}/${{ matrix.path }}/${{ matrix.output_pdf }}"
+          elif [ "${{ matrix.mode }}" = "external-template" ]; then
+            pdf_path="_template/${{ matrix.slug }}/${{ matrix.path }}/${{ matrix.output_pdf }}"
           fi
 
           if [ -f "${pdf_path}" ]; then
@@ -175,7 +195,7 @@ jobs:
           if-no-files-found: error
 
       - name: Fail job on render failure
-        if: steps.render.outcome == 'failure' || steps.render-external.outcome == 'failure'
+        if: steps.render.outcome == 'failure' || steps.render-external.outcome == 'failure' || steps.render-template.outcome == 'failure'
         shell: bash
         run: exit 1
 
