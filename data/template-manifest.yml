@@ -1,0 +1,359 @@
+schema_version: 1
+source:
+  canonical_templates_yaml: https://raw.githubusercontent.com/christopherkenny/christopherkenny.github.io/main/webscripts/templates.yml
+  synced_on: 2026-03-16
+entries:
+  - slug: annual-reviews
+    name: Annual Reviews
+    category: Journal templates
+    description: For Annual Reviews drafts.
+    repo: https://github.com/christopherkenny/annual-reviews
+    image: https://raw.githubusercontent.com/christopherkenny/annual-reviews/main/template_1.png
+    type: Quarto
+    badges: [Quarto, LaTeX]
+    kind: template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: apsr
+    name: APSR
+    category: Journal templates
+    description: For the American Political Science Review submissions.
+    repo: https://github.com/christopherkenny/apsr
+    image: https://raw.githubusercontent.com/christopherkenny/apsr/main/template_1.png
+    type: Quarto
+    badges: [Quarto, LaTeX]
+    kind: template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: cambridge-medium
+    name: Cambridge Medium
+    category: Journal templates
+    description: For Cambridge Medium journal submissions, including PA, PSRM, BJPS, SPQ, and more.
+    repo: https://github.com/christopherkenny/cambridge-medium
+    image: https://raw.githubusercontent.com/christopherkenny/cambridge-medium/main/template_1.png
+    type: Quarto
+    badges: [Quarto, LaTeX]
+    kind: template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: nature
+    name: Nature
+    category: Journal templates
+    description: For Springer Nature journal submissions.
+    repo: https://github.com/christopherkenny/nature
+    image: https://raw.githubusercontent.com/christopherkenny/nature/main/template_1.png
+    type: Quarto
+    badges: [Quarto, LaTeX]
+    kind: template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: pnas
+    name: PNAS
+    category: Journal templates
+    description: For PNAS submissions.
+    repo: https://github.com/christopherkenny/pnas
+    image: https://raw.githubusercontent.com/christopherkenny/pnas/main/template_1.png
+    type: Quarto
+    badges: [Quarto, LaTeX]
+    kind: template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: pnas-si
+    name: PNAS Supporting Information
+    category: Journal templates
+    description: For PNAS SI (appendices) submissions.
+    repo: https://github.com/christopherkenny/pnas-si
+    image: https://raw.githubusercontent.com/christopherkenny/pnas-si/main/template_1.png
+    type: Quarto
+    badges: [Quarto, LaTeX]
+    kind: template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: scientific-data
+    name: Scientific Data
+    category: Journal templates
+    description: 'For Scientific Data "Data Descriptors" submissions.'
+    repo: https://github.com/christopherkenny/scientific-data
+    image: https://raw.githubusercontent.com/christopherkenny/scientific-data/main/template_1.png
+    type: Quarto
+    badges: [Quarto, LaTeX]
+    kind: template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: perspectives
+    name: Perspectives
+    category: Journal templates
+    description: For Perspectives on Politics submissions.
+    repo: https://github.com/christopherkenny/perspectives
+    image: https://raw.githubusercontent.com/christopherkenny/perspectives/main/template_1.png
+    type: Quarto
+    badges: [Quarto, LaTeX]
+    kind: template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: science
+    name: Science
+    category: Journal templates
+    description: For Science and Science Advances submissions.
+    repo: https://github.com/christopherkenny/rticles
+    type: RMarkdown (rticles)
+    badges: [rticles, LaTeX]
+    kind: rmarkdown-template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: This entry uses an rticles workflow and needs a dedicated harness.
+  - slug: oup
+    name: Oxford University Press
+    category: Journal templates
+    description: For submissions to OUP journals.
+    repo: https://github.com/christopherkenny/oup
+    image: https://raw.githubusercontent.com/christopherkenny/oup/main/template_1.png
+    type: Quarto
+    badges: [Quarto, LaTeX]
+    kind: template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: now
+    name: now Publishers
+    category: Journal templates
+    description: For submissions to now Publishers journals, including QJPS.
+    repo: https://github.com/christopherkenny/now
+    image: https://raw.githubusercontent.com/christopherkenny/now/main/template_1.png
+    type: Quarto
+    badges: [Quarto, LaTeX]
+    kind: template
+    engine: latex
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: wordcount
+    name: wordcount
+    category: Quarto filters
+    description: Insert word counts into the body of a document.
+    repo: https://github.com/christopherkenny/wordcount
+    type: Quarto
+    badges: [Quarto, LaTeX, HTML]
+    kind: filter
+    ci:
+      mode: harness-pending
+      enabled: false
+      reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+  - slug: typst-function
+    name: typst-function
+    category: Quarto filters
+    description: Add Typst functions to Quarto documents using div and span syntax.
+    repo: https://github.com/christopherkenny/typst-function
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: filter
+    ci:
+      mode: harness-pending
+      enabled: false
+      reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+  - slug: spellcheck
+    name: spellcheck
+    category: Quarto filters
+    description: Print misspelled words to the console using Hunspell.
+    repo: https://github.com/christopherkenny/spellcheck
+    type: Quarto
+    badges: [Quarto, LaTeX, Typst, HTML]
+    kind: filter
+    ci:
+      mode: harness-pending
+      enabled: false
+      reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+  - slug: typst-refs
+    name: typst-refs
+    category: Quarto filters
+    description: Move a bibliography using the refs div within a Quarto document.
+    repo: https://github.com/christopherkenny/typst-refs
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: filter
+    ci:
+      mode: harness-pending
+      enabled: false
+      reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+  - slug: pseudocode
+    name: pseudocode
+    category: Quarto filters
+    description: Generate and style pseudocode for Typst within a Quarto document.
+    repo: https://github.com/christopherkenny/pseudocode
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: filter
+    ci:
+      mode: harness-pending
+      enabled: false
+      reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+  - slug: tufte
+    name: tufte
+    category: Other templates
+    description: For Tufte-style documents in Quarto with a Typst backend.
+    repo: https://github.com/christopherkenny/tufte
+    image: https://raw.githubusercontent.com/christopherkenny/tufte/main/template_1.png
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: template
+    engine: typst
+    ci:
+      mode: local
+      enabled: true
+      path: tufte
+      input: tufte.qmd
+      output_pdf: tufte.pdf
+      artifact_pdf: tufte.pdf
+  - slug: ctk-article
+    name: ctk-article
+    category: Other templates
+    description: A general purpose template for preprints and submissions using Quarto and Typst.
+    repo: https://github.com/christopherkenny/ctk-article
+    image: https://raw.githubusercontent.com/christopherkenny/ctk-article/main/template_1.png
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: template
+    engine: typst
+    ci:
+      mode: local
+      enabled: true
+      path: ctk-article
+      input: ctk-article.qmd
+      output_pdf: ctk-article.pdf
+      artifact_pdf: ctk-article.pdf
+  - slug: ctk-memo
+    name: ctk-memo
+    category: Other templates
+    description: For memos in Quarto with a Typst backend.
+    repo: https://github.com/christopherkenny/ctk-memo
+    image: https://raw.githubusercontent.com/christopherkenny/ctk-memo/main/template_1.png
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: template
+    engine: typst
+    ci:
+      mode: local
+      enabled: true
+      path: ctk-memo
+      input: ctk-memo.qmd
+      output_pdf: ctk-memo.pdf
+      artifact_pdf: ctk-memo.pdf
+  - slug: ctk-syllabus
+    name: ctk-syllabus
+    category: Other templates
+    description: For syllabi in Quarto with a Typst backend.
+    repo: https://github.com/christopherkenny/ctk-syllabus
+    image: https://raw.githubusercontent.com/christopherkenny/ctk-syllabus/main/template_1.png
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: template
+    engine: typst
+    ci:
+      mode: local
+      enabled: true
+      path: ctk-syllabus
+      input: ctk-syllabus.qmd
+      output_pdf: ctk-syllabus.pdf
+      artifact_pdf: ctk-syllabus.pdf
+  - slug: ctk-legal
+    name: ctk-legal
+    category: Other templates
+    description: An expert report template with automatically numbered paragraphs using Quarto and Typst.
+    repo: https://github.com/christopherkenny/ctk-legal
+    image: https://raw.githubusercontent.com/christopherkenny/ctk-legal/main/template_1.png
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: template
+    engine: typst
+    ci:
+      mode: local
+      enabled: true
+      path: ctk-legal
+      input: ctk-legal.qmd
+      output_pdf: ctk-legal.pdf
+      artifact_pdf: ctk-legal.pdf
+  - slug: ctk-invoice
+    name: ctk-invoice
+    category: Other templates
+    description: An hourly invoice template using Quarto and Typst.
+    repo: https://github.com/christopherkenny/ctk-invoice
+    image: https://raw.githubusercontent.com/christopherkenny/ctk-invoice/main/template_1.png
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: template
+    engine: typst
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: cv
+    name: cv
+    category: Other templates
+    description: For a shortcode + BibTeX powered CV in Quarto with a Typst backend.
+    repo: https://github.com/christopherkenny/quarto-cv
+    image: https://raw.githubusercontent.com/christopherkenny/quarto-cv/main/template_1.png
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: template
+    engine: typst
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: projector
+    name: projector
+    category: Other templates
+    description: Make slides in Quarto powered by Typst's Polylux.
+    repo: https://github.com/christopherkenny/projector
+    image: https://raw.githubusercontent.com/christopherkenny/projector/main/example.gif
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: template
+    engine: typst
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.
+  - slug: harvard-diss
+    name: harvard-diss
+    category: Other templates
+    description: Write a Harvard GSAS Dissertation in Quarto with a Typst backend.
+    repo: https://github.com/christopherkenny/harvard-diss
+    image: https://raw.githubusercontent.com/christopherkenny/harvard-diss/main/template_1.png
+    type: Quarto
+    badges: [Quarto, Typst]
+    kind: template
+    engine: typst
+    ci:
+      mode: external
+      enabled: false
+      reason: External repository integration is planned but not implemented in the first pass.

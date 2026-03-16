@@ -1,0 +1,356 @@
+---
+title: Quarto Template Gallery
+---
+
+This gallery is generated from [`data/template-manifest.yml`](data/template-manifest.yml),
+which is a local working snapshot of the canonical template list in
+[`christopherkenny.github.io/webscripts/templates.yml`](https://github.com/christopherkenny/christopherkenny.github.io/blob/main/webscripts/templates.yml).
+
+Local example builds in this run: 0 passing, 0 failing.
+
+The first CI pass builds the templates vendored into this repo today, while keeping the
+full inventory visible so we can grow toward external clone-based builds and filter harnesses.
+
+## Journal templates
+
+### Annual Reviews
+
+For Annual Reviews drafts.
+
+Repository: [https://github.com/christopherkenny/annual-reviews](https://github.com/christopherkenny/annual-reviews)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/annual-reviews/main/template_1.png){fig-alt="Annual Reviews preview" width="280"}
+
+### APSR
+
+For the American Political Science Review submissions.
+
+Repository: [https://github.com/christopherkenny/apsr](https://github.com/christopherkenny/apsr)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/apsr/main/template_1.png){fig-alt="APSR preview" width="280"}
+
+### Cambridge Medium
+
+For Cambridge Medium journal submissions, including PA, PSRM, BJPS, SPQ, and more.
+
+Repository: [https://github.com/christopherkenny/cambridge-medium](https://github.com/christopherkenny/cambridge-medium)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/cambridge-medium/main/template_1.png){fig-alt="Cambridge Medium preview" width="280"}
+
+### Nature
+
+For Springer Nature journal submissions.
+
+Repository: [https://github.com/christopherkenny/nature](https://github.com/christopherkenny/nature)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/nature/main/template_1.png){fig-alt="Nature preview" width="280"}
+
+### PNAS
+
+For PNAS submissions.
+
+Repository: [https://github.com/christopherkenny/pnas](https://github.com/christopherkenny/pnas)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/pnas/main/template_1.png){fig-alt="PNAS preview" width="280"}
+
+### PNAS Supporting Information
+
+For PNAS SI (appendices) submissions.
+
+Repository: [https://github.com/christopherkenny/pnas-si](https://github.com/christopherkenny/pnas-si)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/pnas-si/main/template_1.png){fig-alt="PNAS Supporting Information preview" width="280"}
+
+### Scientific Data
+
+For Scientific Data "Data Descriptors" submissions.
+
+Repository: [https://github.com/christopherkenny/scientific-data](https://github.com/christopherkenny/scientific-data)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/scientific-data/main/template_1.png){fig-alt="Scientific Data preview" width="280"}
+
+### Perspectives
+
+For Perspectives on Politics submissions.
+
+Repository: [https://github.com/christopherkenny/perspectives](https://github.com/christopherkenny/perspectives)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/perspectives/main/template_1.png){fig-alt="Perspectives preview" width="280"}
+
+### Science
+
+For Science and Science Advances submissions.
+
+Repository: [https://github.com/christopherkenny/rticles](https://github.com/christopherkenny/rticles)
+
+Type: RMarkdown (rticles)
+
+Badges: `rticles` `LaTeX`
+
+CI status: This entry uses an rticles workflow and needs a dedicated harness.
+
+### Oxford University Press
+
+For submissions to OUP journals.
+
+Repository: [https://github.com/christopherkenny/oup](https://github.com/christopherkenny/oup)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/oup/main/template_1.png){fig-alt="Oxford University Press preview" width="280"}
+
+### now Publishers
+
+For submissions to now Publishers journals, including QJPS.
+
+Repository: [https://github.com/christopherkenny/now](https://github.com/christopherkenny/now)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/now/main/template_1.png){fig-alt="now Publishers preview" width="280"}
+
+## Quarto filters
+
+### wordcount
+
+Insert word counts into the body of a document.
+
+Repository: [https://github.com/christopherkenny/wordcount](https://github.com/christopherkenny/wordcount)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX` `HTML`
+
+CI status: Filter harness pending
+
+### typst-function
+
+Add Typst functions to Quarto documents using div and span syntax.
+
+Repository: [https://github.com/christopherkenny/typst-function](https://github.com/christopherkenny/typst-function)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: Filter harness pending
+
+### spellcheck
+
+Print misspelled words to the console using Hunspell.
+
+Repository: [https://github.com/christopherkenny/spellcheck](https://github.com/christopherkenny/spellcheck)
+
+Type: Quarto
+
+Badges: `Quarto` `LaTeX` `Typst` `HTML`
+
+CI status: Filter harness pending
+
+### typst-refs
+
+Move a bibliography using the refs div within a Quarto document.
+
+Repository: [https://github.com/christopherkenny/typst-refs](https://github.com/christopherkenny/typst-refs)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: Filter harness pending
+
+### pseudocode
+
+Generate and style pseudocode for Typst within a Quarto document.
+
+Repository: [https://github.com/christopherkenny/pseudocode](https://github.com/christopherkenny/pseudocode)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: Filter harness pending
+
+## Other templates
+
+### tufte
+
+For Tufte-style documents in Quarto with a Typst backend.
+
+Repository: [https://github.com/christopherkenny/tufte](https://github.com/christopherkenny/tufte)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: Local example configured but not built in this run
+
+![](https://raw.githubusercontent.com/christopherkenny/tufte/main/template_1.png){fig-alt="tufte preview" width="280"}
+
+### ctk-article
+
+A general purpose template for preprints and submissions using Quarto and Typst.
+
+Repository: [https://github.com/christopherkenny/ctk-article](https://github.com/christopherkenny/ctk-article)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: Local example configured but not built in this run
+
+![](https://raw.githubusercontent.com/christopherkenny/ctk-article/main/template_1.png){fig-alt="ctk-article preview" width="280"}
+
+### ctk-memo
+
+For memos in Quarto with a Typst backend.
+
+Repository: [https://github.com/christopherkenny/ctk-memo](https://github.com/christopherkenny/ctk-memo)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: Local example configured but not built in this run
+
+![](https://raw.githubusercontent.com/christopherkenny/ctk-memo/main/template_1.png){fig-alt="ctk-memo preview" width="280"}
+
+### ctk-syllabus
+
+For syllabi in Quarto with a Typst backend.
+
+Repository: [https://github.com/christopherkenny/ctk-syllabus](https://github.com/christopherkenny/ctk-syllabus)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: Local example configured but not built in this run
+
+![](https://raw.githubusercontent.com/christopherkenny/ctk-syllabus/main/template_1.png){fig-alt="ctk-syllabus preview" width="280"}
+
+### ctk-legal
+
+An expert report template with automatically numbered paragraphs using Quarto and Typst.
+
+Repository: [https://github.com/christopherkenny/ctk-legal](https://github.com/christopherkenny/ctk-legal)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: Local example configured but not built in this run
+
+![](https://raw.githubusercontent.com/christopherkenny/ctk-legal/main/template_1.png){fig-alt="ctk-legal preview" width="280"}
+
+### ctk-invoice
+
+An hourly invoice template using Quarto and Typst.
+
+Repository: [https://github.com/christopherkenny/ctk-invoice](https://github.com/christopherkenny/ctk-invoice)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/ctk-invoice/main/template_1.png){fig-alt="ctk-invoice preview" width="280"}
+
+### cv
+
+For a shortcode + BibTeX powered CV in Quarto with a Typst backend.
+
+Repository: [https://github.com/christopherkenny/quarto-cv](https://github.com/christopherkenny/quarto-cv)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/quarto-cv/main/template_1.png){fig-alt="cv preview" width="280"}
+
+### projector
+
+Make slides in Quarto powered by Typst's Polylux.
+
+Repository: [https://github.com/christopherkenny/projector](https://github.com/christopherkenny/projector)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/projector/main/example.gif){fig-alt="projector preview" width="280"}
+
+### harvard-diss
+
+Write a Harvard GSAS Dissertation in Quarto with a Typst backend.
+
+Repository: [https://github.com/christopherkenny/harvard-diss](https://github.com/christopherkenny/harvard-diss)
+
+Type: Quarto
+
+Badges: `Quarto` `Typst`
+
+CI status: External repository integration is planned but not implemented in the first pass.
+
+![](https://raw.githubusercontent.com/christopherkenny/harvard-diss/main/template_1.png){fig-alt="harvard-diss preview" width="280"}

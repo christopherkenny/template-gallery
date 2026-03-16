@@ -1,0 +1,71 @@
+args <- commandArgs(trailingOnly = TRUE)
+manifest_path <- if (length(args) >= 1) args[[1]] else "data/template-manifest.yml"
+
+suppressPackageStartupMessages(library(yaml))
+
+`%||%` <- function(x, y) {
+  if (is.null(x)) y else x
+}
+
+manifest <- yaml::read_yaml(manifest_path)
+
+if (!identical(manifest$schema_version, 1L) && !identical(manifest$schema_version, 1)) {
+  stop(sprintf("Unsupported schema_version: %s", manifest$schema_version), call. = FALSE)
+}
+
+entries <- manifest$entries
+if (length(entries) == 0) {
+  stop("Manifest must contain at least one entry.", call. = FALSE)
+}
+
+required_fields <- c("slug", "name", "category", "description", "repo", "type", "kind")
+slugs <- character()
+categories <- list()
+local_builds <- 0
+
+for (entry in entries) {
+  missing_fields <- required_fields[vapply(required_fields, function(field) {
+    is.null(entry[[field]]) || !nzchar(entry[[field]])
+  }, logical(1))]
+
+  if (length(missing_fields) > 0) {
+    stop(sprintf("Entry is missing required fields: %s", paste(missing_fields, collapse = ", ")), call. = FALSE)
+  }
+
+  if (entry$slug %in% slugs) {
+    stop(sprintf("Duplicate slug found: %s", entry$slug), call. = FALSE)
+  }
+  slugs <- c(slugs, entry$slug)
+
+  if (is.null(entry$badges) || !is.list(entry$badges)) {
+    stop(sprintf('Entry "%s" must have a badges array.', entry$slug), call. = FALSE)
+  }
+
+  if (is.null(entry$ci) || !is.list(entry$ci)) {
+    stop(sprintf('Entry "%s" must define a ci block.', entry$slug), call. = FALSE)
+  }
+
+  categories[[entry$category]] <- (categories[[entry$category]] %||% 0L) + 1L
+
+  if (identical(entry$ci$mode, "local") && isTRUE(entry$ci$enabled)) {
+    local_fields <- c("path", "input", "output_pdf", "artifact_pdf")
+    missing_local <- local_fields[vapply(local_fields, function(field) {
+      is.null(entry$ci[[field]]) || !nzchar(entry$ci[[field]])
+    }, logical(1))]
+
+    if (length(missing_local) > 0) {
+      stop(sprintf('Local build entry "%s" must define ci.%s.',
+        entry$slug,
+        paste(missing_local, collapse = ", ci.")
+      ), call. = FALSE)
+    }
+
+    local_builds <- local_builds + 1L
+  }
+}
+
+cat(sprintf("Validated %d manifest entries from %s.\n", length(entries), manifest_path))
+for (category in names(categories)) {
+  cat(sprintf("- %s: %d\n", category, categories[[category]]))
+}
+cat(sprintf("Local render targets enabled: %d\n", local_builds))

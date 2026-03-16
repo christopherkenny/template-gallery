@@ -1,7 +1,10 @@
 project:
   type: website
+  render:
+    - index.qmd
   resources:
     - "assets/pdfs/*"
+    - "data/*.yml"
 
 website:
   title: "Quarto Template Gallery"
