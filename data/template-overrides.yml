@@ -185,9 +185,13 @@ quarto-cv:
   kind: template
   engine: typst
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/quarto-cv
+    path: "."
+    input: template.qmd
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 projector:
   slug: projector
   kind: template
