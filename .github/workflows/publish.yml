@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install R
         uses: r-lib/actions/setup-r@v2
@@ -38,6 +38,9 @@ jobs:
           packages: |
             any::yaml
             any::jsonlite
+
+      - name: Build manifest
+        run: Rscript scripts/build-manifest.R templates.yml data/template-overrides.yml data/template-manifest.yml
 
       - name: Validate template manifest
         run: Rscript scripts/validate-manifest.R data/template-manifest.yml
@@ -57,7 +60,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install R
         uses: r-lib/actions/setup-r@v2
@@ -135,7 +138,7 @@ jobs:
 
       - name: Upload build artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: template-${{ matrix.slug }}
           path: artifact
@@ -153,10 +156,10 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Download template artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
           pattern: template-*
@@ -172,6 +175,9 @@ jobs:
         with:
           packages: |
             any::yaml
+
+      - name: Build manifest
+        run: Rscript scripts/build-manifest.R templates.yml data/template-overrides.yml data/template-manifest.yml
 
       - name: Merge build results
         run: Rscript scripts/merge-build-results.R artifacts data/build-results.yml assets/pdfs
@@ -190,7 +196,7 @@ jobs:
         run: quarto render .
 
       - name: Upload site artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: site-preview
           path: _site

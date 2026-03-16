@@ -1,0 +1,202 @@
+annual-reviews:
+  slug: annual-reviews
+  kind: template
+  engine: latex
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+apsr:
+  slug: apsr
+  kind: template
+  engine: latex
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+cambridge-medium:
+  slug: cambridge-medium
+  kind: template
+  engine: latex
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+nature:
+  slug: nature
+  kind: template
+  engine: latex
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+pnas:
+  slug: pnas
+  kind: template
+  engine: latex
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+pnas-si:
+  slug: pnas-si
+  kind: template
+  engine: latex
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+scientific-data:
+  slug: scientific-data
+  kind: template
+  engine: latex
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+perspectives:
+  slug: perspectives
+  kind: template
+  engine: latex
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+oup:
+  slug: oup
+  kind: template
+  engine: latex
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+now:
+  slug: now
+  kind: template
+  engine: latex
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+wordcount:
+  slug: wordcount
+  kind: filter
+  ci:
+    mode: harness-pending
+    enabled: false
+    reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+typst-function:
+  slug: typst-function
+  kind: filter
+  ci:
+    mode: harness-pending
+    enabled: false
+    reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+spellcheck:
+  slug: spellcheck
+  kind: filter
+  ci:
+    mode: harness-pending
+    enabled: false
+    reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+typst-refs:
+  slug: typst-refs
+  kind: filter
+  ci:
+    mode: harness-pending
+    enabled: false
+    reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+pseudocode:
+  slug: pseudocode
+  kind: filter
+  ci:
+    mode: harness-pending
+    enabled: false
+    reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+tufte:
+  slug: tufte
+  kind: template
+  engine: typst
+  ci:
+    mode: local
+    enabled: true
+    path: tufte
+    input: tufte.qmd
+    output_pdf: tufte.pdf
+    artifact_pdf: tufte.pdf
+ctk-article:
+  slug: ctk-article
+  kind: template
+  engine: typst
+  ci:
+    mode: local
+    enabled: true
+    path: ctk-article
+    input: ctk-article.qmd
+    output_pdf: ctk-article.pdf
+    artifact_pdf: ctk-article.pdf
+ctk-memo:
+  slug: ctk-memo
+  kind: template
+  engine: typst
+  ci:
+    mode: local
+    enabled: true
+    path: ctk-memo
+    input: ctk-memo.qmd
+    output_pdf: ctk-memo.pdf
+    artifact_pdf: ctk-memo.pdf
+ctk-syllabus:
+  slug: ctk-syllabus
+  kind: template
+  engine: typst
+  ci:
+    mode: local
+    enabled: true
+    path: ctk-syllabus
+    input: ctk-syllabus.qmd
+    output_pdf: ctk-syllabus.pdf
+    artifact_pdf: ctk-syllabus.pdf
+ctk-legal:
+  slug: ctk-legal
+  kind: template
+  engine: typst
+  ci:
+    mode: local
+    enabled: true
+    path: ctk-legal
+    input: ctk-legal.qmd
+    output_pdf: ctk-legal.pdf
+    artifact_pdf: ctk-legal.pdf
+ctk-invoice:
+  slug: ctk-invoice
+  kind: template
+  engine: typst
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+quarto-cv:
+  slug: cv
+  kind: template
+  engine: typst
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+projector:
+  slug: projector
+  kind: template
+  engine: typst
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
+harvard-diss:
+  slug: harvard-diss
+  kind: template
+  engine: typst
+  ci:
+    mode: external
+    enabled: false
+    reason: External repository integration is planned but not implemented in the first pass.
