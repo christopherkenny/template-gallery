@@ -111,13 +111,18 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      - name: Prepare artifact directory
+        if: always()
+        shell: bash
+        run: mkdir -p artifact
+
       - name: Render local example
         if: matrix.mode == 'local'
         id: render
         continue-on-error: true
-        uses: quarto-dev/quarto-actions/render@v2
-        with:
-          path: ${{ matrix.path }}
+        shell: bash
+        working-directory: ${{ matrix.path }}
+        run: quarto render . > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
 
       - name: Clone external template
         if: matrix.mode == 'external'
@@ -130,7 +135,7 @@ jobs:
         continue-on-error: true
         shell: bash
         working-directory: _external/${{ matrix.slug }}/${{ matrix.path }}
-        run: quarto render .
+        run: quarto render . > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
 
       - name: Materialize external template
         if: matrix.mode == 'external-template'
@@ -138,7 +143,12 @@ jobs:
         run: |
           mkdir -p "_template/${{ matrix.slug }}"
           cd "_template/${{ matrix.slug }}"
-          quarto use template "${{ matrix.install_target }}" --no-prompt
+          quarto use template "${{ matrix.install_target }}" --no-prompt > "${GITHUB_WORKSPACE}/artifact/materialize.log" 2>&1
+
+      - name: Capture materialized tree
+        if: matrix.mode == 'external-template'
+        shell: bash
+        run: find "_template/${{ matrix.slug }}" -maxdepth 3 \( -type f -o -type d \) | sort > artifact/tree.txt
 
       - name: Render template example
         if: matrix.mode == 'external-template'
@@ -146,13 +156,12 @@ jobs:
         continue-on-error: true
         shell: bash
         working-directory: _template/${{ matrix.slug }}/${{ matrix.path }}
-        run: quarto render "${{ matrix.input }}"
+        run: quarto render . > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
 
       - name: Collect build outputs
         if: always()
         shell: bash
         run: |
-          mkdir -p artifact
           status="missing"
           render_outcome="${{ steps.render.outcome }}"
           if [ "${{ matrix.mode }}" = "external" ]; then
@@ -172,17 +181,34 @@ jobs:
             pdf_path="_external/${{ matrix.slug }}/${{ matrix.path }}/${{ matrix.output_pdf }}"
           elif [ "${{ matrix.mode }}" = "external-template" ]; then
             pdf_path="_template/${{ matrix.slug }}/${{ matrix.path }}/${{ matrix.output_pdf }}"
+            if [ ! -f "${pdf_path}" ]; then
+              discovered_pdf=$(find "_template/${{ matrix.slug }}/${{ matrix.path }}" -maxdepth 1 -type f -name '*.pdf' | head -n 1)
+              if [ -n "${discovered_pdf}" ]; then
+                pdf_path="${discovered_pdf}"
+              fi
+            fi
           fi
 
           if [ -f "${pdf_path}" ]; then
             cp "${pdf_path}" "artifact/${{ matrix.slug }}.pdf"
           fi
 
+          if [ -f "artifact/render.log" ]; then
+            tail -n 200 "artifact/render.log" > "artifact/render-tail.log"
+          fi
+
           cat > artifact/result.yml <<YAML
           slug: ${{ matrix.slug }}
           name: ${{ matrix.name }}
+          mode: ${{ matrix.mode }}
+          repo: ${{ matrix.repo }}
+          install_target: ${{ matrix.install_target }}
           path: ${{ matrix.path }}
+          input: ${{ matrix.input }}
+          output_pdf: ${{ matrix.output_pdf }}
           status: ${status}
+          render_outcome: ${render_outcome}
+          pdf_path: ${pdf_path}
           pdf:
           YAML
 
