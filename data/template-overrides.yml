@@ -161,6 +161,7 @@ ctk-legal:
   slug: ctk-legal
   kind: template
   engine: typst
+  badges: [Quarto, Typst]
   ci:
     mode: local
     enabled: true

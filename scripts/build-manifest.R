@@ -31,7 +31,7 @@ for (group in source_data) {
       repo = extension$link,
       image = extension$image,
       type = extension$type,
-      badges = extension$badges %||% list(),
+      badges = override$badges %||% extension$badges %||% list(),
       kind = override$kind %||% "template",
       engine = override$engine,
       ci = override$ci %||% list(
