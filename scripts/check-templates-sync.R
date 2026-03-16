@@ -69,6 +69,10 @@ flatten_templates <- function(template_groups) {
   out[order(out$link, out$name), , drop = FALSE]
 }
 
+row_keys <- function(df) {
+  apply(df, 1, function(row) paste(row, collapse = " || "))
+}
+
 local_templates <- yaml::read_yaml(local_path)
 
 tmp <- tempfile(fileext = ".yml")
@@ -80,11 +84,28 @@ local_flat <- flatten_templates(local_templates)
 remote_flat <- flatten_templates(remote_templates)
 
 if (!identical(local_flat, remote_flat)) {
+  local_keys <- row_keys(local_flat)
+  remote_keys <- row_keys(remote_flat)
+  missing_from_local <- setdiff(remote_keys, local_keys)
+  extra_in_local <- setdiff(local_keys, remote_keys)
+
+  message_lines <- c(
+    "Local templates.yml is out of sync with the canonical Quarto template list.",
+    sprintf("Update %s to match the Quarto entries in %s.", local_path, remote_url)
+  )
+
+  if (length(missing_from_local) > 0) {
+    preview <- paste(utils::head(missing_from_local, 5), collapse = "\n- ")
+    message_lines <- c(message_lines, "Missing from local:", paste0("- ", preview))
+  }
+
+  if (length(extra_in_local) > 0) {
+    preview <- paste(utils::head(extra_in_local, 5), collapse = "\n- ")
+    message_lines <- c(message_lines, "Extra in local:", paste0("- ", preview))
+  }
+
   stop(
-    paste(
-      "Local templates.yml is out of sync with the canonical Quarto template list.",
-      sprintf("Update %s to match the Quarto entries in %s.", local_path, remote_url)
-    ),
+    paste(message_lines, collapse = "\n"),
     call. = FALSE
   )
 }
