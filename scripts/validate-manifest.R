@@ -37,8 +37,8 @@ for (entry in entries) {
   }
   slugs <- c(slugs, entry$slug)
 
-  if (is.null(entry$badges) || !is.list(entry$badges)) {
-    stop(sprintf('Entry "%s" must have a badges array.', entry$slug), call. = FALSE)
+  if (is.null(entry$badges) || length(entry$badges) == 0) {
+    stop(sprintf('Entry "%s" must have a non-empty badges array.', entry$slug), call. = FALSE)
   }
 
   if (is.null(entry$ci) || !is.list(entry$ci)) {

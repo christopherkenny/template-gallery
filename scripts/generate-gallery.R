@@ -20,7 +20,7 @@ entries <- manifest$entries
 categories <- unique(vapply(entries, function(entry) entry$category, character(1)))
 
 badge_text <- function(badges) {
-  paste(sprintf("`%s`", unlist(badges)), collapse = " ")
+  paste(sprintf("`%s`", as.character(unlist(badges))), collapse = " ")
 }
 
 status_text <- function(entry) {
