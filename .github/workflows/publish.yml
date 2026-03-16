@@ -111,6 +111,7 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
+          version: 1.9.12
           tinytex: true
 
       - name: Prepare artifact directory
@@ -146,6 +147,38 @@ jobs:
           mkdir -p "_template/${{ matrix.slug }}"
           cd "_template/${{ matrix.slug }}"
           quarto use template "${{ matrix.install_target }}" --no-prompt > "${GITHUB_WORKSPACE}/artifact/materialize.log" 2>&1
+
+      - name: Fetch extra template files
+        if: matrix.mode == 'external-template' && matrix.extra_files != ''
+        shell: bash
+        run: |
+          python_files='${{ toJson(matrix.extra_files) }}'
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          files = json.loads(os.environ["EXTRA_FILES_JSON"])
+          slug = os.environ["MATRIX_SLUG"]
+          repo = os.environ["MATRIX_REPO"]
+          path = os.environ["MATRIX_PATH"]
+
+          owner_repo = repo.removeprefix("https://github.com/")
+          base = f"https://raw.githubusercontent.com/{owner_repo}/main"
+          target_dir = os.path.join("_template", slug, path)
+
+          for rel in files:
+            url = f"{base}/{rel}"
+            dest = os.path.join(target_dir, rel)
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+            urllib.request.urlretrieve(url, dest)
+            print(f"downloaded {url} -> {dest}")
+          PY
+        env:
+          EXTRA_FILES_JSON: ${{ toJson(matrix.extra_files) }}
+          MATRIX_SLUG: ${{ matrix.slug }}
+          MATRIX_REPO: ${{ matrix.repo }}
+          MATRIX_PATH: ${{ matrix.path }}
 
       - name: Capture materialized tree
         if: matrix.mode == 'external-template'
@@ -278,6 +311,8 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.9.12
 
       - name: Render website
         run: quarto render .

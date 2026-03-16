@@ -190,6 +190,8 @@ ctk-syllabus:
     input: ctk-syllabus.qmd
     output_pdf: ctk-syllabus.pdf
     artifact_pdf: ctk-syllabus.pdf
+    extra_files:
+      - example-course-logo.png
 ctk-legal:
   slug: ctk-legal
   kind: template
