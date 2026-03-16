@@ -40,7 +40,7 @@ jobs:
             any::jsonlite
 
       - name: Check canonical template sync
-        run: Rscript scripts/check-templates-sync.R templates.yml https://raw.githubusercontent.com/christopherkenny/christopherkenny.github.io/main/webscripts/templates.yml data/template-sync-exclusions.yml
+        run: Rscript scripts/check-templates-sync.R templates.yml https://raw.githubusercontent.com/christopherkenny/christopherkenny.github.io/main/webscripts/templates.yml
 
       - name: Build manifest
         run: Rscript scripts/build-manifest.R templates.yml data/template-overrides.yml data/template-manifest.yml
