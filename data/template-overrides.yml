@@ -174,8 +174,11 @@ ctk-invoice:
   engine: typst
   ci:
     mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    enabled: true
+    path: .
+    input: template.qmd
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 quarto-cv:
   slug: cv
   kind: template

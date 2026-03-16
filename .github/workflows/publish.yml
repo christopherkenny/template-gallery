@@ -39,6 +39,9 @@ jobs:
             any::yaml
             any::jsonlite
 
+      - name: Check canonical template sync
+        run: Rscript scripts/check-templates-sync.R templates.yml
+
       - name: Build manifest
         run: Rscript scripts/build-manifest.R templates.yml data/template-overrides.yml data/template-manifest.yml
 
@@ -106,11 +109,25 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Render local example
+        if: matrix.mode == 'local'
         id: render
         continue-on-error: true
         uses: quarto-dev/quarto-actions/render@v2
         with:
           path: ${{ matrix.path }}
+
+      - name: Clone external template
+        if: matrix.mode == 'external'
+        shell: bash
+        run: git clone --depth 1 "${{ matrix.repo }}" "_external/${{ matrix.slug }}"
+
+      - name: Render external example
+        if: matrix.mode == 'external'
+        id: render-external
+        continue-on-error: true
+        uses: quarto-dev/quarto-actions/render@v2
+        with:
+          path: _external/${{ matrix.slug }}/${{ matrix.path }}
 
       - name: Collect build outputs
         if: always()
@@ -118,14 +135,24 @@ jobs:
         run: |
           mkdir -p artifact
           status="missing"
-          if [ "${{ steps.render.outcome }}" = "success" ]; then
+          render_outcome="${{ steps.render.outcome }}"
+          if [ "${{ matrix.mode }}" = "external" ]; then
+            render_outcome="${{ steps.render-external.outcome }}"
+          fi
+
+          if [ "${render_outcome}" = "success" ]; then
             status="success"
-          elif [ "${{ steps.render.outcome }}" = "failure" ]; then
+          elif [ "${render_outcome}" = "failure" ]; then
             status="failure"
           fi
 
-          if [ -f "${{ matrix.path }}/${{ matrix.output_pdf }}" ]; then
-            cp "${{ matrix.path }}/${{ matrix.output_pdf }}" "artifact/${{ matrix.slug }}.pdf"
+          pdf_path="${{ matrix.path }}/${{ matrix.output_pdf }}"
+          if [ "${{ matrix.mode }}" = "external" ]; then
+            pdf_path="_external/${{ matrix.slug }}/${{ matrix.path }}/${{ matrix.output_pdf }}"
+          fi
+
+          if [ -f "${pdf_path}" ]; then
+            cp "${pdf_path}" "artifact/${{ matrix.slug }}.pdf"
           fi
 
           cat > artifact/result.yml <<YAML
@@ -145,7 +172,7 @@ jobs:
           if-no-files-found: error
 
       - name: Fail job on render failure
-        if: steps.render.outcome == 'failure'
+        if: steps.render.outcome == 'failure' || steps.render-external.outcome == 'failure'
         shell: bash
         run: exit 1
 
@@ -184,6 +211,10 @@ jobs:
 
       - name: Generate gallery page
         run: Rscript scripts/generate-gallery.R data/template-manifest.yml data/build-results.yml index.qmd
+
+      - name: Write job summary
+        shell: bash
+        run: Rscript scripts/write-job-summary.R data/template-manifest.yml data/build-results.yml >> "$GITHUB_STEP_SUMMARY"
 
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && needs.build-local-templates.result == 'success'
