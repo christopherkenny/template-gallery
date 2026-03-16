@@ -23,30 +23,44 @@ badge_text <- function(badges) {
   paste(sprintf("`%s`", as.character(unlist(badges))), collapse = " ")
 }
 
+mode_text <- function(entry) {
+  mode <- entry$ci$mode %||% "unknown"
+
+  if (identical(mode, "external-template")) {
+    return("Installed and tested via `quarto use template`")
+  }
+
+  if (identical(mode, "local")) {
+    return("Vendored local project")
+  }
+
+  if (identical(mode, "external")) {
+    return("External repository render")
+  }
+
+  if (identical(mode, "harness-pending")) {
+    return("Not yet enabled")
+  }
+
+  "Not yet enabled"
+}
+
 status_text <- function(entry) {
   result <- build_results$results[[entry$slug]]
 
   if (!is.null(result$status) && identical(result$status, "success")) {
-    return("Passing local example build")
+    return("Passing CI")
   }
 
   if (!is.null(result$status) && identical(result$status, "failure")) {
-    return("Local example build failed")
-  }
-
-  if (identical(entry$ci$mode, "local")) {
-    return("Local example configured but not built in this run")
-  }
-
-  if (identical(entry$ci$mode, "harness-pending")) {
-    return("Filter harness pending")
+    return("Failing CI")
   }
 
   if (!is.null(entry$ci$reason)) {
     return(entry$ci$reason)
   }
 
-  "Not yet built in CI"
+  "Not enabled in CI"
 }
 
 pdf_link <- function(entry) {
@@ -67,13 +81,13 @@ lines <- c(
   "[`christopherkenny.github.io/webscripts/templates.yml`](https://github.com/christopherkenny/christopherkenny.github.io/blob/main/webscripts/templates.yml).",
   "",
   sprintf(
-    "Local example builds in this run: %d passing, %d failing.",
+    "Enabled CI builds in this run: %d passing, %d failing.",
     build_results$summary$success %||% 0L,
     build_results$summary$failure %||% 0L
   ),
   "",
-  "The first CI pass builds the templates vendored into this repo today, while keeping the",
-  "full inventory visible so we can grow toward external clone-based builds and filter harnesses.",
+  "Enabled templates and filters are exercised through the Quarto CLI using repo-provided",
+  "example files or materialized template projects, while the full inventory remains visible.",
   ""
 )
 
@@ -93,6 +107,8 @@ for (category in categories) {
       sprintf("Type: %s", entry$type),
       "",
       sprintf("Badges: %s", badge_text(entry$badges)),
+      "",
+      sprintf("CI mode: %s", mode_text(entry)),
       "",
       sprintf("CI status: %s", status_text(entry)),
       ""
