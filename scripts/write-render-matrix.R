@@ -25,6 +25,7 @@ matrix <- list(include = lapply(entries, function(entry) {
     repo = normalize_string(entry$repo),
     install_target = normalize_string(entry$ci$install_target),
     path = normalize_string(entry$ci$path, "."),
+    render_target = normalize_string(entry$ci$render_target, "project"),
     input = normalize_string(entry$ci$input),
     output_pdf = normalize_string(entry$ci$output_pdf),
     artifact_pdf = normalize_string(entry$ci$artifact_pdf)

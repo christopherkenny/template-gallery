@@ -82,45 +82,72 @@ wordcount:
   slug: wordcount
   kind: filter
   ci:
-    mode: harness-pending
-    enabled: false
-    reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/wordcount
+    path: "."
+    render_target: file
+    input: example.qmd
+    output_pdf: example.pdf
+    artifact_pdf: example.pdf
 typst-function:
   slug: typst-function
   kind: filter
   ci:
-    mode: harness-pending
-    enabled: false
-    reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/typst-function
+    path: "."
+    render_target: file
+    input: example.qmd
+    output_pdf: example.pdf
+    artifact_pdf: example.pdf
 spellcheck:
   slug: spellcheck
   kind: filter
   ci:
-    mode: harness-pending
-    enabled: false
-    reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/spellcheck
+    path: "."
+    render_target: file
+    input: example.qmd
+    output_pdf: example.pdf
+    artifact_pdf: example.pdf
 typst-refs:
   slug: typst-refs
   kind: filter
   ci:
-    mode: harness-pending
-    enabled: false
-    reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/typst-refs
+    path: "."
+    render_target: file
+    input: example.qmd
+    output_pdf: example.pdf
+    artifact_pdf: example.pdf
 pseudocode:
   slug: pseudocode
   kind: filter
   ci:
-    mode: harness-pending
-    enabled: false
-    reason: Filters need a reusable test harness instead of a standalone gallery PDF.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/pseudocode
+    path: "."
+    render_target: file
+    input: example.qmd
+    output_pdf: example.pdf
+    artifact_pdf: example.pdf
 tufte:
   slug: tufte
   kind: template
   engine: typst
   ci:
-    mode: local
+    mode: external-template
     enabled: true
-    path: tufte
+    install_target: christopherkenny/tufte
+    path: "."
+    render_target: file
     input: tufte.qmd
     output_pdf: tufte.pdf
     artifact_pdf: tufte.pdf
@@ -129,9 +156,11 @@ ctk-article:
   kind: template
   engine: typst
   ci:
-    mode: local
+    mode: external-template
     enabled: true
-    path: ctk-article
+    install_target: christopherkenny/ctk-article
+    path: "."
+    render_target: file
     input: ctk-article.qmd
     output_pdf: ctk-article.pdf
     artifact_pdf: ctk-article.pdf
@@ -140,9 +169,11 @@ ctk-memo:
   kind: template
   engine: typst
   ci:
-    mode: local
+    mode: external-template
     enabled: true
-    path: ctk-memo
+    install_target: christopherkenny/ctk-memo
+    path: "."
+    render_target: file
     input: ctk-memo.qmd
     output_pdf: ctk-memo.pdf
     artifact_pdf: ctk-memo.pdf
@@ -151,9 +182,11 @@ ctk-syllabus:
   kind: template
   engine: typst
   ci:
-    mode: local
+    mode: external-template
     enabled: true
-    path: ctk-syllabus
+    install_target: christopherkenny/ctk-syllabus
+    path: "."
+    render_target: file
     input: ctk-syllabus.qmd
     output_pdf: ctk-syllabus.pdf
     artifact_pdf: ctk-syllabus.pdf
@@ -162,9 +195,11 @@ ctk-legal:
   kind: template
   engine: typst
   ci:
-    mode: local
+    mode: external-template
     enabled: true
-    path: ctk-legal
+    install_target: christopherkenny/ctk-legal
+    path: "."
+    render_target: file
     input: ctk-legal.qmd
     output_pdf: ctk-legal.pdf
     artifact_pdf: ctk-legal.pdf
@@ -177,7 +212,8 @@ ctk-invoice:
     enabled: true
     install_target: christopherkenny/ctk-invoice
     path: "."
-    input: template.qmd
+    render_target: project
+    input: ""
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 quarto-cv:
@@ -189,7 +225,8 @@ quarto-cv:
     enabled: true
     install_target: christopherkenny/quarto-cv
     path: "."
-    input: template.qmd
+    render_target: project
+    input: ""
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 projector:

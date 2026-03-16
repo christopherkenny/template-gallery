@@ -110,6 +110,8 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
 
       - name: Prepare artifact directory
         if: always()
@@ -156,7 +158,12 @@ jobs:
         continue-on-error: true
         shell: bash
         working-directory: _template/${{ matrix.slug }}/${{ matrix.path }}
-        run: quarto render . > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
+        run: |
+          render_target="."
+          if [ "${{ matrix.render_target }}" = "file" ] && [ -n "${{ matrix.input }}" ]; then
+            render_target="${{ matrix.input }}"
+          fi
+          quarto render "${render_target}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
 
       - name: Collect build outputs
         if: always()
