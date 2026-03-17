@@ -134,6 +134,7 @@ wordcount:
   ci:
     mode: external-template
     enabled: true
+    needs_r: true
     install_target: christopherkenny/wordcount
     path: "."
     render_target: file
@@ -208,6 +209,7 @@ ctk-article:
   ci:
     mode: external-template
     enabled: true
+    needs_r: true
     install_target: christopherkenny/ctk-article
     path: "."
     render_target: file
