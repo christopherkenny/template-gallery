@@ -3,81 +3,131 @@ annual-reviews:
   kind: template
   engine: latex
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/annual-reviews
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 apsr:
   slug: apsr
   kind: template
   engine: latex
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/apsr
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 cambridge-medium:
   slug: cambridge-medium
   kind: template
   engine: latex
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/cambridge-medium
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 nature:
   slug: nature
   kind: template
   engine: latex
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/nature
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 pnas:
   slug: pnas
   kind: template
   engine: latex
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/pnas
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 pnas-si:
   slug: pnas-si
   kind: template
   engine: latex
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/pnas-si
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 scientific-data:
   slug: scientific-data
   kind: template
   engine: latex
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/scientific-data
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 perspectives:
   slug: perspectives
   kind: template
   engine: latex
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/perspectives
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 oup:
   slug: oup
   kind: template
   engine: latex
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/oup
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 now:
   slug: now
   kind: template
   engine: latex
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/now
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 wordcount:
   slug: wordcount
   kind: filter
@@ -249,6 +299,11 @@ harvard-diss:
   kind: template
   engine: typst
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/harvard-diss
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
