@@ -241,11 +241,21 @@ if (length(built_entries) == 0) {
     ""
   )
 } else {
-  lines <- c(lines, "::: {.gallery-grid}")
-  for (entry in built_entries) {
-    lines <- c(lines, make_card(entry))
+  for (category in categories) {
+    category_entries <- Filter(function(entry) {
+      identical(entry$category, category) && !is.null(pdf_link(entry))
+    }, built_entries)
+
+    if (length(category_entries) == 0) {
+      next
+    }
+
+    lines <- c(lines, sprintf("### %s", category), "", "::: {.gallery-grid}")
+    for (entry in category_entries) {
+      lines <- c(lines, make_card(entry))
+    }
+    lines <- c(lines, ":::", "")
   }
-  lines <- c(lines, ":::", "")
 }
 
 lines <- c(lines, "## Failing Builds", "")
@@ -253,11 +263,21 @@ lines <- c(lines, "## Failing Builds", "")
 if (length(failing_entries) == 0) {
   lines <- c(lines, "No enabled entries are currently failing CI.", "")
 } else {
-  lines <- c(lines, "::: {.gallery-grid}")
-  for (entry in failing_entries) {
-    lines <- c(lines, make_card(entry))
+  for (category in categories) {
+    category_entries <- Filter(function(entry) {
+      identical(entry$category, category) && identical(status_class(entry), "failure")
+    }, failing_entries)
+
+    if (length(category_entries) == 0) {
+      next
+    }
+
+    lines <- c(lines, sprintf("### %s", category), "", "::: {.gallery-grid}")
+    for (entry in category_entries) {
+      lines <- c(lines, make_card(entry))
+    }
+    lines <- c(lines, ":::", "")
   }
-  lines <- c(lines, ":::", "")
 }
 
 for (category in categories) {

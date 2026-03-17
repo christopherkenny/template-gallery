@@ -181,6 +181,7 @@ jobs:
         shell: bash
         working-directory: _template/${{ matrix.slug }}/${{ matrix.path }}
         run: |
+          touch "${GITHUB_WORKSPACE}/artifact/render-start.txt"
           render_target="."
           if [ "${{ matrix.render_target }}" = "file" ] && [ -n "${{ matrix.input }}" ]; then
             render_target="${{ matrix.input }}"
@@ -216,7 +217,7 @@ jobs:
           elif [ "${{ matrix.mode }}" = "external-template" ]; then
             pdf_path="_template/${{ matrix.slug }}/${{ matrix.path }}/${{ matrix.output_pdf }}"
             if [ -d "_template/${{ matrix.slug }}/${{ matrix.path }}" ] && [ ! -f "${pdf_path}" ]; then
-              discovered_pdf=$(find "_template/${{ matrix.slug }}/${{ matrix.path }}" -type f -name '*.pdf' | sort | head -n 1)
+              discovered_pdf=$(find "_template/${{ matrix.slug }}/${{ matrix.path }}" -type f -name '*.pdf' -newer "artifact/render-start.txt" -printf '%T@ %p\n' | sort -nr | head -n 1 | cut -d' ' -f2-)
               if [ -n "${discovered_pdf}" ]; then
                 pdf_path="${discovered_pdf}"
               fi
