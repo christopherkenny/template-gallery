@@ -68,20 +68,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v5
 
-      - name: Install R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: "4.5.3"
-
-      - name: Install R dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          packages: |
-            any::knitr
-            any::rmarkdown
-            any::jsonlite
-
       - name: Cache fonts
+        if: matrix.engine == 'typst'
         id: cache-fonts
         uses: actions/cache@v5
         with:
@@ -89,7 +77,7 @@ jobs:
           key: spectral-v1
 
       - name: Download Spectral font
-        if: steps.cache-fonts.outputs.cache-hit != 'true'
+        if: matrix.engine == 'typst' && steps.cache-fonts.outputs.cache-hit != 'true'
         shell: bash
         run: |
           mkdir -p fonts/spectral
@@ -103,6 +91,7 @@ jobs:
           wget -P fonts/spectral/ "$base_url/Spectral-ExtraBold.ttf"
 
       - name: Install Spectral system-wide
+        if: matrix.engine == 'typst'
         shell: bash
         run: |
           sudo mkdir -p /usr/share/fonts/truetype/spectral
@@ -115,6 +104,7 @@ jobs:
           version: 1.9.12
 
       - name: Install TinyTeX
+        if: matrix.engine == 'latex'
         uses: r-lib/actions/setup-tinytex@v2
 
       - name: Prepare artifact directory
@@ -157,7 +147,16 @@ jobs:
         if: matrix.mode == 'external-template' && matrix.extra_files != ''
         shell: bash
         run: |
-          Rscript -e "files <- jsonlite::fromJSON(Sys.getenv('EXTRA_FILES_JSON')); if (is.character(files) && length(files) == 1 && !startsWith(Sys.getenv('EXTRA_FILES_JSON'), '[')) files <- c(files); repo <- sub('^https://github.com/', '', Sys.getenv('MATRIX_REPO')); target_dir <- file.path('_template', Sys.getenv('MATRIX_SLUG'), Sys.getenv('MATRIX_PATH')); dir.create(target_dir, recursive = TRUE, showWarnings = FALSE); for (rel in files) { url <- sprintf('https://raw.githubusercontent.com/%s/main/%s', repo, rel); dest <- file.path(target_dir, rel); dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE); download.file(url, destfile = dest, mode = 'wb', quiet = FALSE); cat(sprintf('downloaded %s -> %s\\n', url, dest)); }"
+          repo="${MATRIX_REPO#https://github.com/}"
+          target_dir="_template/${MATRIX_SLUG}/${MATRIX_PATH}"
+          mkdir -p "${target_dir}"
+          printf '%s' "${EXTRA_FILES_JSON}" | jq -r '.[]' | while IFS= read -r rel; do
+            url="https://raw.githubusercontent.com/${repo}/main/${rel}"
+            dest="${target_dir}/${rel}"
+            mkdir -p "$(dirname "${dest}")"
+            curl -fsSL "${url}" -o "${dest}"
+            printf 'downloaded %s -> %s\n' "${url}" "${dest}"
+          done
         env:
           EXTRA_FILES_JSON: ${{ toJson(matrix.extra_files) }}
           MATRIX_SLUG: ${{ matrix.slug }}

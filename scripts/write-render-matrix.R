@@ -21,6 +21,8 @@ matrix <- list(include = lapply(entries, function(entry) {
   list(
     slug = normalize_string(entry$slug),
     name = normalize_string(entry$name),
+    kind = normalize_string(entry$kind),
+    engine = normalize_string(entry$engine),
     mode = normalize_string(entry$ci$mode),
     repo = normalize_string(entry$repo),
     install_target = normalize_string(entry$ci$install_target),
