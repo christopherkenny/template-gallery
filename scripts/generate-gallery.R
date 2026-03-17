@@ -181,11 +181,14 @@ make_card <- function(entry) {
   if (!is.null(pdf)) {
     body_parts <- c(
       body_parts,
+      "<div class=\"gallery-pdf-wrap\">",
       sprintf(
-        "<iframe class=\"gallery-pdf\" src=\"%s#toolbar=0&navpanes=0&scrollbar=0&view=FitH\" title=\"%s sample PDF preview\" loading=\"lazy\"></iframe>",
+        "<object class=\"gallery-pdf\" data=\"%s#toolbar=0&navpanes=0&scrollbar=0&view=FitH\" type=\"application/pdf\"><p>PDF preview unavailable in this browser. <a href=\"%s\">Open the sample PDF</a>.</p></object>",
         pdf,
-        escape_html(entry$name)
+        pdf
       ),
+      "<div class=\"gallery-pdf-overlay\" aria-hidden=\"true\"></div>",
+      "</div>",
       sprintf(
         "<div class=\"gallery-links\"><a href=\"%s\">Open sample PDF</a></div>",
         pdf
