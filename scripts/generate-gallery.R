@@ -52,42 +52,43 @@ status_text <- function(entry) {
   result <- entry_result(entry)
 
   if (identical(result$status, "success")) {
-    return("Passing CI")
+    return("Passing")
   }
 
   if (identical(result$status, "failure")) {
-    return("Failing CI")
+    return("Failing")
   }
 
   if (!isTRUE(entry$ci$enabled %||% FALSE)) {
-    return("Not enabled in CI")
+    return("Not enabled")
   }
 
-  normalize_text(entry$ci$reason, "Waiting for CI result")
+  normalize_text(entry$ci$reason, "Pending")
 }
 
 mode_text <- function(entry) {
   mode <- normalize_text(entry$ci$mode, "unknown")
 
   if (identical(mode, "external-template")) {
-    return("Installed and tested with quarto use template")
+    return("Quarto CLI")
   }
 
   if (identical(mode, "external")) {
-    return("External repository render")
+    return("Repo render")
   }
 
   if (identical(mode, "local")) {
-    return("Local project render")
+    return("Local render")
   }
 
-  "Not enabled"
+  "Pending"
 }
 
 badge_values <- function(entry) {
   badges <- unlist(entry$badges %||% list(), use.names = FALSE)
   badges <- as.character(badges)
-  badges[nzchar(badges)]
+  badges <- badges[nzchar(badges)]
+  unique(badges)
 }
 
 pdf_link <- function(entry) {
@@ -96,6 +97,10 @@ pdf_link <- function(entry) {
     return(NULL)
   }
   pdf
+}
+
+repo_label <- function(url) {
+  sub("^https://github.com/", "", url)
 }
 
 escape_html <- function(text) {
@@ -120,17 +125,14 @@ make_card <- function(entry) {
   state_class <- status_class(entry)
   badges <- badge_values(entry)
 
-  meta_parts <- c(
-    sprintf("<span class=\"gallery-pill\">%s</span>", escape_html(entry$type)),
-    sprintf("<span class=\"gallery-pill\">%s</span>", escape_html(mode_text(entry)))
-  )
+  meta_parts <- c(sprintf("<span class=\"gallery-meta-item\">%s</span>", escape_html(entry$type)))
 
   if (length(badges) > 0) {
     meta_parts <- c(
       meta_parts,
       vapply(
         badges,
-        function(badge) sprintf("<span class=\"gallery-pill\">%s</span>", escape_html(badge)),
+        function(badge) sprintf("<span class=\"gallery-meta-item\">%s</span>", escape_html(badge)),
         character(1)
       )
     )
@@ -146,7 +148,11 @@ make_card <- function(entry) {
     sprintf("<span class=\"gallery-status %s\">%s</span>", state_class, escape_html(status)),
     "</div>",
     sprintf("<div class=\"gallery-meta\">%s</div>", paste(meta_parts, collapse = "")),
-    sprintf("<p class=\"gallery-note\"><strong>Repository:</strong> <a href=\"%s\">%s</a></p>", entry$repo, escape_html(entry$repo))
+    sprintf(
+      "<div class=\"gallery-links\"><a class=\"gallery-repo\" href=\"%s\">%s</a></div>",
+      entry$repo,
+      escape_html(repo_label(entry$repo))
+    )
   )
 
   if (!is.null(pdf)) {
@@ -192,14 +198,14 @@ lines <- c(
   "---",
   "",
   "::: {.gallery-lede}",
-  "This gallery publishes the sample PDFs produced by CI. If an entry does not have a current PDF artifact, it does not get a visual preview here.",
+  "Sample PDFs from the latest CI run.",
   ":::",
   "",
   "::: {.gallery-summary}",
   make_stat_block("Passing", build_results$summary$success %||% 0L),
   make_stat_block("Failing", build_results$summary$failure %||% 0L),
   make_stat_block("No Result", build_results$summary$missing %||% 0L),
-  make_stat_block("Showing PDFs", length(built_entries)),
+  make_stat_block("Visible", length(built_entries)),
   ":::",
   "",
   "## Built Samples",
