@@ -113,7 +113,9 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
         with:
           version: 1.9.12
-          tinytex: true
+
+      - name: Install TinyTeX
+        uses: r-lib/actions/setup-tinytex@v2
 
       - name: Prepare artifact directory
         if: always()
