@@ -99,6 +99,14 @@ pdf_link <- function(entry) {
   pdf
 }
 
+result_link <- function(entry, field) {
+  value <- normalize_text(entry_result(entry)[[field]])
+  if (!nzchar(value)) {
+    return(NULL)
+  }
+  value
+}
+
 repo_label <- function(url) {
   sub("^https://github.com/", "", url)
 }
@@ -155,6 +163,21 @@ make_card <- function(entry) {
     )
   )
 
+  if (identical(state_class, "failure")) {
+    run_url <- result_link(entry, "run_url")
+    artifact_name <- escape_html(normalize_text(entry_result(entry)$artifact_name))
+    if (!is.null(run_url)) {
+      body_parts <- c(
+        body_parts,
+        sprintf(
+          "<p class=\"gallery-note\">See <a href=\"%s\">run details</a>%s.</p>",
+          run_url,
+          if (nzchar(artifact_name)) sprintf(" and artifact <code>%s</code>", artifact_name) else ""
+        )
+      )
+    }
+  }
+
   if (!is.null(pdf)) {
     body_parts <- c(
       body_parts,
@@ -180,11 +203,10 @@ make_card <- function(entry) {
 
 make_inventory_row <- function(entry) {
   sprintf(
-    "| [%s](%s) | %s | %s | %s |",
+    "| %s | [%s](%s) | %s |",
     entry$name,
+    repo_label(entry$repo),
     entry$repo,
-    entry$type,
-    mode_text(entry),
     status_text(entry)
   )
 }
@@ -256,8 +278,8 @@ for (category in categories) {
     lines,
     sprintf("## %s Inventory", category),
     "",
-    "| Entry | Type | CI mode | Status |",
-    "| --- | --- | --- | --- |"
+    "| Entry | Repo | Status |",
+    "| --- | --- | --- |"
   )
 
   for (entry in category_entries) {

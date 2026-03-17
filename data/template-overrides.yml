@@ -236,9 +236,14 @@ projector:
   kind: template
   engine: typst
   ci:
-    mode: external
-    enabled: false
-    reason: External repository integration is planned but not implemented in the first pass.
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/projector
+    path: "."
+    render_target: project
+    input: ""
+    output_pdf: example.pdf
+    artifact_pdf: example.pdf
 harvard-diss:
   slug: harvard-diss
   kind: template

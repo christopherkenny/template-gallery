@@ -236,6 +236,8 @@ jobs:
           name: ${{ matrix.name }}
           mode: ${{ matrix.mode }}
           repo: ${{ matrix.repo }}
+          run_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          artifact_name: template-${{ matrix.slug }}
           install_target: ${{ matrix.install_target }}
           path: ${{ matrix.path }}
           input: ${{ matrix.input }}
