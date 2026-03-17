@@ -1,0 +1,155 @@
+.quarto-title-block .title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.gallery-lede {
+  max-width: 52rem;
+  font-size: 1.1rem;
+  color: #334155;
+}
+
+.gallery-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.9rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.gallery-stat {
+  padding: 1rem 1.1rem;
+  border-radius: 0.9rem;
+  border: 1px solid #dbe4ee;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.gallery-stat-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.gallery-stat-value {
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #0f172a;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+  margin: 1rem 0 2rem;
+}
+
+.gallery-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.1rem;
+  border-radius: 1rem;
+  border: 1px solid #dbe4ee;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.gallery-card.failure {
+  border-color: #fecaca;
+  background: #fff8f8;
+}
+
+.gallery-card.pending {
+  border-style: dashed;
+  background: #f8fafc;
+}
+
+.gallery-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.gallery-card-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.gallery-card-header p {
+  margin: 0.3rem 0 0;
+  color: #475569;
+}
+
+.gallery-status {
+  flex-shrink: 0;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.gallery-status.success {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.gallery-status.failure {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.gallery-status.pending {
+  color: #475569;
+  background: #e2e8f0;
+}
+
+.gallery-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.gallery-pill {
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.82rem;
+}
+
+.gallery-pdf {
+  width: 100%;
+  height: 30rem;
+  border: 1px solid #dbe4ee;
+  border-radius: 0.8rem;
+  background: #f8fafc;
+}
+
+.gallery-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.gallery-note {
+  margin: 0;
+  color: #475569;
+}
+
+.inventory-table {
+  font-size: 0.96rem;
+}
+
+@media (max-width: 700px) {
+  .gallery-pdf {
+    height: 24rem;
+  }
+}

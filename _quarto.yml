@@ -8,3 +8,9 @@ project:
 
 website:
   title: "Quarto Template Gallery"
+
+format:
+  html:
+    theme: cosmo
+    css: assets/gallery.css
+    toc: false

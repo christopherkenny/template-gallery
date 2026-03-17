@@ -31,6 +31,7 @@ lines <- c(
   sprintf("- Success: %d", results$summary$success %||% 0L),
   sprintf("- Failure: %d", results$summary$failure %||% 0L),
   sprintf("- Missing: %d", results$summary$missing %||% 0L),
+  "- The site is still rendered from the latest run even when some entries fail.",
   "",
   "| Template | Mode | Status | PDF |",
   "| --- | --- | --- | --- |"
