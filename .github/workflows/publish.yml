@@ -81,7 +81,11 @@ jobs:
 
       - name: Install R dependencies
         if: matrix.needs_r
-        run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2', 'kableExtra'), repos = 'https://cloud.r-project.org'); stopifnot(requireNamespace('knitr', quietly = TRUE), requireNamespace('rmarkdown', quietly = TRUE), requireNamespace('ggplot2', quietly = TRUE), requireNamespace('kableExtra', quietly = TRUE))"
+        run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2'), repos = 'https://cloud.r-project.org'); stopifnot(requireNamespace('knitr', quietly = TRUE), requireNamespace('rmarkdown', quietly = TRUE), requireNamespace('ggplot2', quietly = TRUE))"
+
+      - name: Install APSR-specific R dependencies
+        if: matrix.slug == 'apsr'
+        run: Rscript -e "install.packages('kableExtra', repos = 'https://cloud.r-project.org'); stopifnot(requireNamespace('kableExtra', quietly = TRUE))"
 
       - name: Cache fonts
         if: matrix.engine == 'typst'
