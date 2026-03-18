@@ -189,8 +189,7 @@ jobs:
             extra_args+=(--pdf-engine pdflatex)
           fi
           if [ "${{ matrix.slug }}" = "perspectives" ] || [ "${{ matrix.slug }}" = "annual-reviews" ]; then
-            extra_args+=(-M cite-method=numeric)
-            extra_args+=(-M biblio-style=numbered)
+            extra_args+=(-M natbiboptions=numbers)
           fi
           printf 'render_target=%s\nexpected_pdf=%s\nworking_directory=%s\n' "${render_target}" "${expected_pdf}" "$(pwd)" > "${GITHUB_WORKSPACE}/artifact/render-context.txt"
           quarto render "${render_target}" "${extra_args[@]}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
