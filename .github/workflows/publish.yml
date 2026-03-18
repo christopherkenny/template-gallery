@@ -72,9 +72,16 @@ jobs:
         with:
           r-version: "4.5.3"
 
+      - name: Install system libraries for R packages
+        if: matrix.needs_r
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpng-dev
+
       - name: Install R dependencies
         if: matrix.needs_r
-        run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2', 'kableExtra'), repos = 'https://cloud.r-project.org', dependencies = TRUE); stopifnot(requireNamespace('knitr', quietly = TRUE), requireNamespace('rmarkdown', quietly = TRUE), requireNamespace('ggplot2', quietly = TRUE), requireNamespace('kableExtra', quietly = TRUE))"
+        run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2', 'kableExtra'), repos = 'https://cloud.r-project.org'); stopifnot(requireNamespace('knitr', quietly = TRUE), requireNamespace('rmarkdown', quietly = TRUE), requireNamespace('ggplot2', quietly = TRUE), requireNamespace('kableExtra', quietly = TRUE))"
 
       - name: Cache fonts
         if: matrix.engine == 'typst'
