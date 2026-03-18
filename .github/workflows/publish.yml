@@ -72,7 +72,7 @@ jobs:
 
       - name: Install R dependencies
         if: matrix.needs_r
-        run: Rscript -e "install.packages(c('knitr', 'rmarkdown'), repos = 'https://cloud.r-project.org')"
+        run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2'), repos = 'https://cloud.r-project.org')"
 
       - name: Cache fonts
         if: matrix.engine == 'typst'
@@ -112,6 +112,13 @@ jobs:
       - name: Install TinyTeX
         if: matrix.engine == 'latex'
         uses: r-lib/actions/setup-tinytex@v2
+
+      - name: Install Ghostscript
+        if: matrix.engine == 'latex'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ghostscript
 
       - name: Prepare artifact directory
         if: always()
@@ -188,6 +195,7 @@ jobs:
         run: |
           render_target="."
           expected_pdf="${{ matrix.output_pdf }}"
+          extra_args=()
           if [ "${{ matrix.render_target }}" = "file" ] && [ -n "${{ matrix.input }}" ]; then
             render_target="${{ matrix.input }}"
             if [ ! -f "${render_target}" ]; then
@@ -198,8 +206,14 @@ jobs:
             fi
             expected_pdf="$(basename "${render_target}" .qmd).pdf"
           fi
+          if [ "${{ matrix.slug }}" = "annual-reviews" ]; then
+            extra_args+=(--pdf-engine pdflatex)
+          fi
+          if [ "${{ matrix.slug }}" = "perspectives" ]; then
+            extra_args+=(-M natbiboptions=numbers)
+          fi
           printf 'render_target=%s\nexpected_pdf=%s\nworking_directory=%s\n' "${render_target}" "${expected_pdf}" "$(pwd)" > "${GITHUB_WORKSPACE}/artifact/render-context.txt"
-          quarto render "${render_target}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
+          quarto render "${render_target}" "${extra_args[@]}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
 
       - name: Capture recursive file list
         if: always()

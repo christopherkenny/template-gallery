@@ -162,12 +162,6 @@ main.content {
   background: #ffffff;
 }
 
-.gallery-pdf-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
 .gallery-links {
   display: flex;
   align-items: center;

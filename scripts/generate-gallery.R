@@ -198,7 +198,6 @@ make_card <- function(entry) {
         pdf,
         pdf
       ),
-      "<div class=\"gallery-pdf-overlay\" aria-hidden=\"true\"></div>",
       "</div>",
       sprintf(
         "<div class=\"gallery-links\"><a href=\"%s\">Open sample PDF</a></div>",
