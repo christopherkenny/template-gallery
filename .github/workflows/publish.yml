@@ -9,6 +9,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  R_CRAN_WEB: https://cloud.r-project.org
 
 permissions:
   contents: read
@@ -35,6 +36,10 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: "4.5.3"
+
+      - name: Set CRAN mirror
+        shell: bash
+        run: echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' >> ~/.Rprofile
 
       - name: Set up r2u
         uses: eddelbuettel/github-actions/r2u-setup@master
@@ -74,6 +79,11 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: "4.5.3"
+
+      - name: Set CRAN mirror
+        if: matrix.needs_r
+        shell: bash
+        run: echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' >> ~/.Rprofile
 
       - name: Set up r2u
         if: matrix.needs_r
@@ -325,6 +335,10 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: "4.5.3"
+
+      - name: Set CRAN mirror
+        shell: bash
+        run: echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' >> ~/.Rprofile
 
       - name: Set up r2u
         uses: eddelbuettel/github-actions/r2u-setup@master
