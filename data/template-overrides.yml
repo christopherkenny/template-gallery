@@ -7,8 +7,8 @@ annual-reviews:
     enabled: true
     install_target: christopherkenny/annual-reviews
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 apsr:
@@ -20,8 +20,8 @@ apsr:
     enabled: true
     install_target: christopherkenny/apsr
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 cambridge-medium:
@@ -33,8 +33,8 @@ cambridge-medium:
     enabled: true
     install_target: christopherkenny/cambridge-medium
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 nature:
@@ -46,8 +46,8 @@ nature:
     enabled: true
     install_target: christopherkenny/nature
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 pnas:
@@ -59,8 +59,8 @@ pnas:
     enabled: true
     install_target: christopherkenny/pnas
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 pnas-si:
@@ -72,8 +72,8 @@ pnas-si:
     enabled: true
     install_target: christopherkenny/pnas-si
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 scientific-data:
@@ -85,8 +85,8 @@ scientific-data:
     enabled: true
     install_target: christopherkenny/scientific-data
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 perspectives:
@@ -98,8 +98,8 @@ perspectives:
     enabled: true
     install_target: christopherkenny/perspectives
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 oup:
@@ -111,8 +111,8 @@ oup:
     enabled: true
     install_target: christopherkenny/oup
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 now:
@@ -124,8 +124,8 @@ now:
     enabled: true
     install_target: christopherkenny/now
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 wordcount:
@@ -267,8 +267,8 @@ ctk-invoice:
     enabled: true
     install_target: christopherkenny/ctk-invoice
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 quarto-cv:
@@ -280,8 +280,8 @@ quarto-cv:
     enabled: true
     install_target: christopherkenny/quarto-cv
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
 projector:
@@ -293,10 +293,10 @@ projector:
     enabled: true
     install_target: christopherkenny/projector
     path: "."
-    render_target: project
-    input: ""
-    output_pdf: example.pdf
-    artifact_pdf: example.pdf
+    render_target: file
+    input: template.qmd
+    output_pdf: template.pdf
+    artifact_pdf: template.pdf
 harvard-diss:
   slug: harvard-diss
   kind: template
@@ -306,7 +306,7 @@ harvard-diss:
     enabled: true
     install_target: christopherkenny/harvard-diss
     path: "."
-    render_target: project
-    input: ""
+    render_target: file
+    input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
