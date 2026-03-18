@@ -131,6 +131,7 @@ now:
 wordcount:
   slug: wordcount
   kind: filter
+  engine: latex
   ci:
     mode: external-template
     enabled: true
