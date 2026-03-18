@@ -74,7 +74,7 @@ jobs:
 
       - name: Install R dependencies
         if: matrix.needs_r
-        run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2', 'kableExtra'), repos = 'https://cloud.r-project.org')"
+        run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2', 'kableExtra'), repos = 'https://cloud.r-project.org', dependencies = TRUE); stopifnot(requireNamespace('knitr', quietly = TRUE), requireNamespace('rmarkdown', quietly = TRUE), requireNamespace('ggplot2', quietly = TRUE), requireNamespace('kableExtra', quietly = TRUE))"
 
       - name: Cache fonts
         if: matrix.engine == 'typst'
@@ -189,7 +189,7 @@ jobs:
             extra_args+=(--pdf-engine pdflatex)
           fi
           if [ "${{ matrix.slug }}" = "perspectives" ] || [ "${{ matrix.slug }}" = "annual-reviews" ]; then
-            extra_args+=(-M natbiboptions=numbers)
+            extra_args+=(-M classoption=numbers)
           fi
           printf 'render_target=%s\nexpected_pdf=%s\nworking_directory=%s\n' "${render_target}" "${expected_pdf}" "$(pwd)" > "${GITHUB_WORKSPACE}/artifact/render-context.txt"
           quarto render "${render_target}" "${extra_args[@]}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
