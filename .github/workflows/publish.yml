@@ -179,6 +179,25 @@ jobs:
             printf 'materialized directory missing: _template/%s\n' "${{ matrix.slug }}" > artifact/tree.txt
           fi
 
+      - name: Capture recursive file list
+        if: always()
+        shell: bash
+        run: |
+          target_dir="."
+          if [ "${{ matrix.mode }}" = "external" ]; then
+            target_dir="_external/${{ matrix.slug }}"
+          elif [ "${{ matrix.mode }}" = "external-template" ]; then
+            target_dir="_template/${{ matrix.slug }}"
+          elif [ "${{ matrix.mode }}" = "local" ]; then
+            target_dir="${{ matrix.path }}"
+          fi
+
+          if [ -d "${target_dir}" ]; then
+            find "${target_dir}" \( -type f -o -type d \) | sort > artifact/files.txt
+          else
+            printf 'target directory missing: %s\n' "${target_dir}" > artifact/files.txt
+          fi
+
       - name: Render template example
         if: matrix.mode == 'external-template' && steps.materialize-template.outcome == 'success'
         id: render-template
