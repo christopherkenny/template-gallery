@@ -79,6 +79,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libpng-dev
 
+      - name: Install APSR system libraries
+        if: matrix.slug == 'apsr'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfontconfig1-dev libcairo2-dev libharfbuzz-dev libfribidi-dev
+
       - name: Install R dependencies
         if: matrix.needs_r
         run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2'), repos = 'https://cloud.r-project.org'); stopifnot(requireNamespace('knitr', quietly = TRUE), requireNamespace('rmarkdown', quietly = TRUE), requireNamespace('ggplot2', quietly = TRUE))"
