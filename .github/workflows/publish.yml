@@ -187,10 +187,18 @@ jobs:
         working-directory: _template/${{ matrix.slug }}/${{ matrix.path }}
         run: |
           render_target="."
+          expected_pdf="${{ matrix.output_pdf }}"
           if [ "${{ matrix.render_target }}" = "file" ] && [ -n "${{ matrix.input }}" ]; then
             render_target="${{ matrix.input }}"
+            if [ ! -f "${render_target}" ]; then
+              mapfile -t qmd_files < <(find . -maxdepth 1 -type f -name '*.qmd' | sort)
+              if [ "${#qmd_files[@]}" -eq 1 ]; then
+                render_target="${qmd_files[0]#./}"
+              fi
+            fi
+            expected_pdf="$(basename "${render_target}" .qmd).pdf"
           fi
-          printf 'render_target=%s\nworking_directory=%s\n' "${render_target}" "$(pwd)" > "${GITHUB_WORKSPACE}/artifact/render-context.txt"
+          printf 'render_target=%s\nexpected_pdf=%s\nworking_directory=%s\n' "${render_target}" "${expected_pdf}" "$(pwd)" > "${GITHUB_WORKSPACE}/artifact/render-context.txt"
           quarto render "${render_target}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
 
       - name: Capture recursive file list
@@ -239,7 +247,14 @@ jobs:
           if [ "${{ matrix.mode }}" = "external" ]; then
             pdf_path="_external/${{ matrix.slug }}/${{ matrix.path }}/${{ matrix.output_pdf }}"
           elif [ "${{ matrix.mode }}" = "external-template" ]; then
-            pdf_path="_template/${{ matrix.slug }}/${{ matrix.path }}/${{ matrix.output_pdf }}"
+            expected_pdf="${{ matrix.output_pdf }}"
+            if [ -f "artifact/render-context.txt" ]; then
+              resolved_expected_pdf=$(awk -F= '$1 == "expected_pdf" { print $2 }' artifact/render-context.txt | tail -n 1)
+              if [ -n "${resolved_expected_pdf}" ]; then
+                expected_pdf="${resolved_expected_pdf}"
+              fi
+            fi
+            pdf_path="_template/${{ matrix.slug }}/${{ matrix.path }}/${expected_pdf}"
           fi
 
           if [ -f "${pdf_path}" ]; then
