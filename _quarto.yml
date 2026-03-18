@@ -8,6 +8,11 @@ project:
 
 website:
   title: "Quarto Template Gallery"
+  navbar:
+    right:
+      - icon: github
+        href: https://github.com/christopherkenny/template-gallery
+        aria-label: GitHub repository
 
 format:
   html:
