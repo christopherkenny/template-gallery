@@ -5,6 +5,7 @@ annual-reviews:
   ci:
     mode: external-template
     enabled: true
+    needs_r: true
     install_target: christopherkenny/annual-reviews
     path: "."
     render_target: file
@@ -18,6 +19,7 @@ apsr:
   ci:
     mode: external-template
     enabled: true
+    needs_r: true
     install_target: christopherkenny/apsr
     path: "."
     render_target: file
@@ -57,6 +59,7 @@ pnas:
   ci:
     mode: external-template
     enabled: true
+    needs_r: true
     install_target: christopherkenny/pnas
     path: "."
     render_target: file
@@ -70,6 +73,7 @@ pnas-si:
   ci:
     mode: external-template
     enabled: true
+    needs_r: true
     install_target: christopherkenny/pnas-si
     path: "."
     render_target: file
@@ -96,6 +100,7 @@ perspectives:
   ci:
     mode: external-template
     enabled: true
+    needs_r: true
     install_target: christopherkenny/perspectives
     path: "."
     render_target: file
@@ -109,6 +114,7 @@ oup:
   ci:
     mode: external-template
     enabled: true
+    needs_r: true
     install_target: christopherkenny/oup
     path: "."
     render_target: file
@@ -122,6 +128,7 @@ now:
   ci:
     mode: external-template
     enabled: true
+    needs_r: true
     install_target: christopherkenny/now
     path: "."
     render_target: file
@@ -297,6 +304,8 @@ projector:
     input: template.qmd
     output_pdf: template.pdf
     artifact_pdf: template.pdf
+    extra_files:
+      - projector.png
 harvard-diss:
   slug: harvard-diss
   kind: template
