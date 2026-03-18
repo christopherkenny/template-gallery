@@ -190,6 +190,7 @@ jobs:
           if [ "${{ matrix.render_target }}" = "file" ] && [ -n "${{ matrix.input }}" ]; then
             render_target="${{ matrix.input }}"
           fi
+          printf 'render_target=%s\nworking_directory=%s\n' "${render_target}" "$(pwd)" > "${GITHUB_WORKSPACE}/artifact/render-context.txt"
           quarto render "${render_target}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
 
       - name: Capture recursive file list
@@ -249,6 +250,12 @@ jobs:
 
           if [ -f "artifact/render.log" ]; then
             tail -n 200 "artifact/render.log" > "artifact/render-tail.log"
+          fi
+
+          if [ "${{ matrix.mode }}" = "external-template" ] && [ -d "_template/${{ matrix.slug }}/_site" ]; then
+            find "_template/${{ matrix.slug }}/_site" \( -type f -o -type d \) | sort > "artifact/site-files.txt"
+          elif [ "${{ matrix.mode }}" = "external-template" ]; then
+            printf '_site directory missing for %s\n' "${{ matrix.slug }}" > "artifact/site-files.txt"
           fi
 
           cat > artifact/result.yml <<YAML
