@@ -41,7 +41,7 @@ status_class <- function(entry) {
     return("success")
   }
 
-  if (identical(result$status, "failure")) {
+  if (identical(result$status, "failure") || identical(result$status, "missing-artifact")) {
     return("failure")
   }
 
@@ -57,6 +57,10 @@ status_text <- function(entry) {
 
   if (identical(result$status, "failure")) {
     return("Failing")
+  }
+
+  if (identical(result$status, "missing-artifact")) {
+    return("Missing PDF")
   }
 
   if (!isTRUE(entry$ci$enabled %||% FALSE)) {
