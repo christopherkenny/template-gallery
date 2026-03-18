@@ -179,6 +179,19 @@ jobs:
             printf 'materialized directory missing: _template/%s\n' "${{ matrix.slug }}" > artifact/tree.txt
           fi
 
+      - name: Render template example
+        if: matrix.mode == 'external-template' && steps.materialize-template.outcome == 'success'
+        id: render-template
+        continue-on-error: true
+        shell: bash
+        working-directory: _template/${{ matrix.slug }}/${{ matrix.path }}
+        run: |
+          render_target="."
+          if [ "${{ matrix.render_target }}" = "file" ] && [ -n "${{ matrix.input }}" ]; then
+            render_target="${{ matrix.input }}"
+          fi
+          quarto render "${render_target}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
+
       - name: Capture recursive file list
         if: always()
         shell: bash
@@ -197,19 +210,6 @@ jobs:
           else
             printf 'target directory missing: %s\n' "${target_dir}" > artifact/files.txt
           fi
-
-      - name: Render template example
-        if: matrix.mode == 'external-template' && steps.materialize-template.outcome == 'success'
-        id: render-template
-        continue-on-error: true
-        shell: bash
-        working-directory: _template/${{ matrix.slug }}/${{ matrix.path }}
-        run: |
-          render_target="."
-          if [ "${{ matrix.render_target }}" = "file" ] && [ -n "${{ matrix.input }}" ]; then
-            render_target="${{ matrix.input }}"
-          fi
-          quarto render "${render_target}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
 
       - name: Collect build outputs
         if: always()
