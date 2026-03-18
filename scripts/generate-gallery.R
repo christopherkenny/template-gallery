@@ -91,7 +91,7 @@ mode_text <- function(entry) {
 badge_values <- function(entry) {
   badges <- unlist(entry$badges %||% list(), use.names = FALSE)
   badges <- as.character(badges)
-  badges <- badges[nzchar(badges)]
+  badges <- badges[nzchar(badges) & badges != "NA"]
   unique(badges)
 }
 
@@ -136,8 +136,12 @@ make_card <- function(entry) {
   status <- status_text(entry)
   state_class <- status_class(entry)
   badges <- badge_values(entry)
+  entry_type <- normalize_text(entry$type)
 
-  meta_parts <- c(sprintf("<span class=\"gallery-meta-item\">%s</span>", escape_html(entry$type)))
+  meta_parts <- character()
+  if (nzchar(entry_type)) {
+    meta_parts <- c(meta_parts, sprintf("<span class=\"gallery-meta-item\">%s</span>", escape_html(entry_type)))
+  }
 
   if (length(badges) > 0) {
     meta_parts <- c(
@@ -159,13 +163,16 @@ make_card <- function(entry) {
     "</div>",
     sprintf("<span class=\"gallery-status %s\">%s</span>", state_class, escape_html(status)),
     "</div>",
-    sprintf("<div class=\"gallery-meta\">%s</div>", paste(meta_parts, collapse = "")),
     sprintf(
       "<div class=\"gallery-links\"><a class=\"gallery-repo\" href=\"%s\">%s</a></div>",
       entry$repo,
       escape_html(repo_label(entry$repo))
     )
   )
+
+  if (length(meta_parts) > 0) {
+    body_parts <- append(body_parts, sprintf("<div class=\"gallery-meta\">%s</div>", paste(meta_parts, collapse = "")), after = 4)
+  }
 
   if (identical(state_class, "failure")) {
     run_url <- result_link(entry, "run_url")
