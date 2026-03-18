@@ -21,6 +21,7 @@ concurrency:
 
 jobs:
   validate:
+    name: Validate
     runs-on: ubuntu-latest
 
     outputs:
@@ -52,7 +53,8 @@ jobs:
         shell: bash
         run: echo "matrix=$(Rscript scripts/write-render-matrix.R data/template-manifest.yml)" >> "$GITHUB_OUTPUT"
 
-  build-local-templates:
+  build-templates:
+    name: Render ${{ matrix.slug }}
     needs: validate
     runs-on: ubuntu-latest
 
@@ -125,29 +127,7 @@ jobs:
         shell: bash
         run: mkdir -p artifact
 
-      - name: Render local example
-        if: matrix.mode == 'local'
-        id: render
-        continue-on-error: true
-        shell: bash
-        working-directory: ${{ matrix.path }}
-        run: quarto render . > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
-
-      - name: Clone external template
-        if: matrix.mode == 'external'
-        shell: bash
-        run: git clone --depth 1 "${{ matrix.repo }}" "_external/${{ matrix.slug }}"
-
-      - name: Render external example
-        if: matrix.mode == 'external'
-        id: render-external
-        continue-on-error: true
-        shell: bash
-        working-directory: _external/${{ matrix.slug }}/${{ matrix.path }}
-        run: quarto render . > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
-
-      - name: Materialize external template
-        if: matrix.mode == 'external-template'
+      - name: Materialize template
         id: materialize-template
         continue-on-error: true
         shell: bash
@@ -157,7 +137,7 @@ jobs:
           quarto use template "${{ matrix.install_target }}" --no-prompt > "${GITHUB_WORKSPACE}/artifact/materialize.log" 2>&1
 
       - name: Fetch extra template files
-        if: matrix.mode == 'external-template' && matrix.extra_files != ''
+        if: matrix.extra_files != ''
         shell: bash
         run: |
           repo="${MATRIX_REPO#https://github.com/}"
@@ -177,7 +157,6 @@ jobs:
           MATRIX_PATH: ${{ matrix.path }}
 
       - name: Capture materialized tree
-        if: matrix.mode == 'external-template'
         shell: bash
         run: |
           if [ -d "_template/${{ matrix.slug }}" ]; then
@@ -187,7 +166,7 @@ jobs:
           fi
 
       - name: Render template example
-        if: matrix.mode == 'external-template' && steps.materialize-template.outcome == 'success'
+        if: steps.materialize-template.outcome == 'success'
         id: render-template
         continue-on-error: true
         shell: bash
@@ -220,14 +199,7 @@ jobs:
         if: always()
         shell: bash
         run: |
-          target_dir="."
-          if [ "${{ matrix.mode }}" = "external" ]; then
-            target_dir="_external/${{ matrix.slug }}"
-          elif [ "${{ matrix.mode }}" = "external-template" ]; then
-            target_dir="_template/${{ matrix.slug }}"
-          elif [ "${{ matrix.mode }}" = "local" ]; then
-            target_dir="${{ matrix.path }}"
-          fi
+          target_dir="_template/${{ matrix.slug }}"
 
           if [ -d "${target_dir}" ]; then
             find "${target_dir}" \( -type f -o -type d \) | sort > artifact/files.txt
@@ -240,16 +212,10 @@ jobs:
         shell: bash
         run: |
           status="missing"
-          render_outcome="${{ steps.render.outcome }}"
-          materialize_outcome=""
-          if [ "${{ matrix.mode }}" = "external" ]; then
-            render_outcome="${{ steps.render-external.outcome }}"
-          elif [ "${{ matrix.mode }}" = "external-template" ]; then
-            materialize_outcome="${{ steps.materialize-template.outcome }}"
-            render_outcome="${{ steps.render-template.outcome }}"
-            if [ "${materialize_outcome}" = "failure" ] && [ "${render_outcome}" != "success" ]; then
-              render_outcome="failure"
-            fi
+          materialize_outcome="${{ steps.materialize-template.outcome }}"
+          render_outcome="${{ steps.render-template.outcome }}"
+          if [ "${materialize_outcome}" = "failure" ] && [ "${render_outcome}" != "success" ]; then
+            render_outcome="failure"
           fi
 
           if [ "${render_outcome}" = "success" ]; then
@@ -258,19 +224,14 @@ jobs:
             status="failure"
           fi
 
-          pdf_path="${{ matrix.path }}/${{ matrix.output_pdf }}"
-          if [ "${{ matrix.mode }}" = "external" ]; then
-            pdf_path="_external/${{ matrix.slug }}/${{ matrix.path }}/${{ matrix.output_pdf }}"
-          elif [ "${{ matrix.mode }}" = "external-template" ]; then
-            expected_pdf="${{ matrix.output_pdf }}"
-            if [ -f "artifact/render-context.txt" ]; then
-              resolved_expected_pdf=$(awk -F= '$1 == "expected_pdf" { print $2 }' artifact/render-context.txt | tail -n 1)
-              if [ -n "${resolved_expected_pdf}" ]; then
-                expected_pdf="${resolved_expected_pdf}"
-              fi
+          expected_pdf="${{ matrix.output_pdf }}"
+          if [ -f "artifact/render-context.txt" ]; then
+            resolved_expected_pdf=$(awk -F= '$1 == "expected_pdf" { print $2 }' artifact/render-context.txt | tail -n 1)
+            if [ -n "${resolved_expected_pdf}" ]; then
+              expected_pdf="${resolved_expected_pdf}"
             fi
-            pdf_path="_template/${{ matrix.slug }}/${{ matrix.path }}/${expected_pdf}"
           fi
+          pdf_path="_template/${{ matrix.slug }}/${{ matrix.path }}/${expected_pdf}"
 
           if [ -f "${pdf_path}" ]; then
             cp "${pdf_path}" "artifact/${{ matrix.slug }}.pdf"
@@ -282,9 +243,9 @@ jobs:
             tail -n 200 "artifact/render.log" > "artifact/render-tail.log"
           fi
 
-          if [ "${{ matrix.mode }}" = "external-template" ] && [ -d "_template/${{ matrix.slug }}/_site" ]; then
+          if [ -d "_template/${{ matrix.slug }}/_site" ]; then
             find "_template/${{ matrix.slug }}/_site" \( -type f -o -type d \) | sort > "artifact/site-files.txt"
-          elif [ "${{ matrix.mode }}" = "external-template" ]; then
+          else
             printf '_site directory missing for %s\n' "${{ matrix.slug }}" > "artifact/site-files.txt"
           fi
 
@@ -315,7 +276,8 @@ jobs:
           if-no-files-found: error
 
   build-site:
-    needs: [validate, build-local-templates]
+    name: Build Site
+    needs: [validate, build-templates]
     if: always() && needs.validate.result == 'success'
     runs-on: ubuntu-latest
 
@@ -376,7 +338,8 @@ jobs:
           path: _site
 
   deploy:
-    needs: [build-local-templates, build-site]
+    name: Deploy
+    needs: [build-templates, build-site]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && needs.build-site.result == 'success'
     runs-on: ubuntu-latest
     environment:

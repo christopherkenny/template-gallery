@@ -11,7 +11,6 @@ annual-reviews:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 apsr:
   slug: apsr
   kind: template
@@ -25,7 +24,6 @@ apsr:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 cambridge-medium:
   slug: cambridge-medium
   kind: template
@@ -38,7 +36,6 @@ cambridge-medium:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 nature:
   slug: nature
   kind: template
@@ -51,7 +48,6 @@ nature:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 pnas:
   slug: pnas
   kind: template
@@ -65,7 +61,6 @@ pnas:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 pnas-si:
   slug: pnas-si
   kind: template
@@ -79,7 +74,6 @@ pnas-si:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 scientific-data:
   slug: scientific-data
   kind: template
@@ -92,7 +86,6 @@ scientific-data:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 perspectives:
   slug: perspectives
   kind: template
@@ -106,7 +99,6 @@ perspectives:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 oup:
   slug: oup
   kind: template
@@ -120,7 +112,6 @@ oup:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 now:
   slug: now
   kind: template
@@ -134,7 +125,6 @@ now:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 wordcount:
   slug: wordcount
   kind: filter
@@ -148,7 +138,6 @@ wordcount:
     render_target: file
     input: example.qmd
     output_pdf: example.pdf
-    artifact_pdf: example.pdf
 typst-function:
   slug: typst-function
   kind: filter
@@ -160,7 +149,6 @@ typst-function:
     render_target: file
     input: example.qmd
     output_pdf: example.pdf
-    artifact_pdf: example.pdf
 spellcheck:
   slug: spellcheck
   kind: filter
@@ -172,7 +160,6 @@ spellcheck:
     render_target: file
     input: example.qmd
     output_pdf: example.pdf
-    artifact_pdf: example.pdf
 typst-refs:
   slug: typst-refs
   kind: filter
@@ -184,7 +171,6 @@ typst-refs:
     render_target: file
     input: example.qmd
     output_pdf: example.pdf
-    artifact_pdf: example.pdf
 pseudocode:
   slug: pseudocode
   kind: filter
@@ -196,7 +182,6 @@ pseudocode:
     render_target: file
     input: example.qmd
     output_pdf: example.pdf
-    artifact_pdf: example.pdf
 tufte:
   slug: tufte
   kind: template
@@ -209,7 +194,6 @@ tufte:
     render_target: file
     input: tufte.qmd
     output_pdf: tufte.pdf
-    artifact_pdf: tufte.pdf
 ctk-article:
   slug: ctk-article
   kind: template
@@ -223,7 +207,6 @@ ctk-article:
     render_target: file
     input: ctk-article.qmd
     output_pdf: ctk-article.pdf
-    artifact_pdf: ctk-article.pdf
 ctk-memo:
   slug: ctk-memo
   kind: template
@@ -236,7 +219,6 @@ ctk-memo:
     render_target: file
     input: ctk-memo.qmd
     output_pdf: ctk-memo.pdf
-    artifact_pdf: ctk-memo.pdf
 ctk-syllabus:
   slug: ctk-syllabus
   kind: template
@@ -249,7 +231,6 @@ ctk-syllabus:
     render_target: file
     input: ctk-syllabus.qmd
     output_pdf: ctk-syllabus.pdf
-    artifact_pdf: ctk-syllabus.pdf
     extra_files:
       - example-course-logo.png
 ctk-legal:
@@ -264,7 +245,6 @@ ctk-legal:
     render_target: file
     input: ctk-legal.qmd
     output_pdf: ctk-legal.pdf
-    artifact_pdf: ctk-legal.pdf
 ctk-invoice:
   slug: ctk-invoice
   kind: template
@@ -277,7 +257,6 @@ ctk-invoice:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 quarto-cv:
   slug: cv
   kind: template
@@ -290,7 +269,6 @@ quarto-cv:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
 projector:
   slug: projector
   kind: template
@@ -303,7 +281,6 @@ projector:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf
     extra_files:
       - projector.png
 harvard-diss:
@@ -318,4 +295,3 @@ harvard-diss:
     render_target: file
     input: template.qmd
     output_pdf: template.pdf
-    artifact_pdf: template.pdf

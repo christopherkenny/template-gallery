@@ -35,9 +35,9 @@ for (group in source_data) {
       kind = override$kind %||% "template",
       engine = override$engine,
       ci = override$ci %||% list(
-        mode = "external",
+        mode = "external-template",
         enabled = FALSE,
-        reason = "External repository integration is planned but not implemented in the first pass."
+        reason = "Not enabled in CI."
       )
     )
 

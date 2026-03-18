@@ -21,7 +21,7 @@ if (length(entries) == 0) {
 required_fields <- c("slug", "name", "category", "description", "repo", "type", "kind")
 slugs <- character()
 categories <- list()
-local_builds <- 0
+enabled_builds <- 0L
 
 for (entry in entries) {
   missing_fields <- required_fields[vapply(required_fields, function(field) {
@@ -47,20 +47,29 @@ for (entry in entries) {
 
   categories[[entry$category]] <- (categories[[entry$category]] %||% 0L) + 1L
 
-  if (identical(entry$ci$mode, "local") && isTRUE(entry$ci$enabled)) {
-    local_fields <- c("path", "input", "output_pdf", "artifact_pdf")
-    missing_local <- local_fields[vapply(local_fields, function(field) {
+  if (isTRUE(entry$ci$enabled)) {
+    if (!identical(entry$ci$mode, "external-template")) {
+      stop(sprintf('Enabled entry "%s" must use ci.mode = "external-template".', entry$slug), call. = FALSE)
+    }
+
+    required_ci_fields <- c("install_target", "path", "render_target", "output_pdf")
+    missing_ci <- required_ci_fields[vapply(required_ci_fields, function(field) {
       is.null(entry$ci[[field]]) || !nzchar(entry$ci[[field]])
     }, logical(1))]
 
-    if (length(missing_local) > 0) {
-      stop(sprintf('Local build entry "%s" must define ci.%s.',
+    if (length(missing_ci) > 0) {
+      stop(sprintf('Enabled entry "%s" must define ci.%s.',
         entry$slug,
-        paste(missing_local, collapse = ", ci.")
+        paste(missing_ci, collapse = ", ci.")
       ), call. = FALSE)
     }
 
-    local_builds <- local_builds + 1L
+    if (identical(entry$ci$render_target, "file") &&
+        (is.null(entry$ci$input) || !nzchar(entry$ci$input))) {
+      stop(sprintf('File-render entry "%s" must define ci.input.', entry$slug), call. = FALSE)
+    }
+
+    enabled_builds <- enabled_builds + 1L
   }
 }
 
@@ -68,4 +77,4 @@ cat(sprintf("Validated %d manifest entries from %s.\n", length(entries), manifes
 for (category in names(categories)) {
   cat(sprintf("- %s: %d\n", category, categories[[category]]))
 }
-cat(sprintf("Local render targets enabled: %d\n", local_builds))
+cat(sprintf("Enabled CI render targets: %d\n", enabled_builds))

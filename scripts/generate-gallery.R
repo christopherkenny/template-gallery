@@ -77,14 +77,6 @@ mode_text <- function(entry) {
     return("Quarto CLI")
   }
 
-  if (identical(mode, "external")) {
-    return("Repo render")
-  }
-
-  if (identical(mode, "local")) {
-    return("Local render")
-  }
-
   "Pending"
 }
 
@@ -240,7 +232,7 @@ lines <- c(
   make_stat_block("Passing", build_results$summary$success %||% 0L),
   make_stat_block("Failing", build_results$summary$failure %||% 0L),
   make_stat_block("No Result", build_results$summary$missing %||% 0L),
-  make_stat_block("Visible", length(built_entries)),
+  make_stat_block("Visible PDFs", length(built_entries)),
   ":::",
   "",
   "## Built Samples",

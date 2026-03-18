@@ -3,15 +3,56 @@
 
 # Template Gallery
 
-This repo automates building my Quarto templates so that they can be displayed as a gallery.
+This repo automates building Quarto templates and filters into a public gallery of CI-built sample PDFs.
 
-The current CI pass is manifest-driven:
+The workflow is manifest-driven:
 
 - `templates.yml` is the readable inventory snapshot aligned with the canonical list.
-- `data/template-overrides.yml` holds CI-only metadata like Quarto install targets, render targets, and extra example assets.
-- `data/template-manifest.yml` is the generated working manifest used by CI.
-- `scripts/build-manifest.R` merges the inventory and overrides before validation.
-- `scripts/validate-manifest.R` validates the generated manifest and drives the matrix.
-- `.github/workflows/publish.yml` installs enabled templates and filters through the Quarto CLI, renders the repo-provided examples or projects, writes a run summary, assembles PDFs into `assets/pdfs/*.pdf`, generates a PDF-first `index.qmd`, and publishes the site on pushes to `main` even when some entries fail.
+- `data/template-overrides.yml` holds CI-only settings for entries that should be built.
+- `data/template-manifest.yml` is the generated manifest used by CI.
+- `scripts/build-manifest.R` merges the inventory and overrides.
+- `scripts/validate-manifest.R` checks that enabled entries have the fields the workflow expects.
+- `scripts/write-render-matrix.R` turns enabled entries into the GitHub Actions matrix.
+- `.github/workflows/publish.yml` installs each enabled entry with `quarto use template`, renders it, captures logs and PDFs as artifacts, generates `index.qmd`, and publishes the site on pushes to `main`.
 
-The manifest intentionally includes the full known template list, even when a given entry is not yet enabled in CI.
+The manifest intentionally includes the full known template list, even when an entry is not yet enabled in CI.
+
+## Override fields
+
+Each entry in `data/template-overrides.yml` can define:
+
+- `engine`: `typst` or `latex`. This controls extra setup like fonts or TinyTeX.
+- `ci.mode`: currently always `external-template`. The workflow installs the repo with the Quarto CLI instead of using a vendored local copy.
+- `ci.enabled`: whether that entry should be part of the CI build matrix.
+- `ci.install_target`: the value passed to `quarto use template`.
+- `ci.path`: subdirectory inside the materialized template to render. Most entries use `"."`.
+- `ci.render_target`: usually `file`. This tells the workflow to render a specific `.qmd` rather than the whole directory.
+- `ci.input`: the preferred `.qmd` filename to render.
+- `ci.output_pdf`: the expected PDF output path relative to `ci.path`.
+- `ci.needs_r`: install R and the minimal CRAN packages needed by examples that execute R code.
+- `ci.extra_files`: extra assets to copy in when `quarto use template` does not materialize everything needed for the example render.
+
+## Render behavior
+
+The workflow assumes a Quarto CLI install-and-render path for all enabled entries:
+
+1. `quarto use template <install_target> --no-prompt`
+2. Render the example file from the materialized directory
+3. Copy the expected PDF into `assets/pdfs`
+4. Merge all `result.yml` files into `data/build-results.yml`
+5. Generate `index.qmd` from the manifest plus build results
+
+For file renders, the workflow tries `ci.input` first. If that file is not present after materialization and there is exactly one top-level `.qmd`, it renders that file instead and expects the matching `.pdf`. This is what lets entries like `apsr.qmd` or `cv.qmd` work without maintaining one-off filename logic per repo.
+
+## Artifacts
+
+Each matrix build uploads a `template-<slug>` artifact with:
+
+- `result.yml`: final status, chosen render target, and expected PDF path
+- `render.log`: full Quarto output
+- `render-tail.log`: the last 200 lines of render output
+- `materialize.log`: output from `quarto use template`
+- `tree.txt`: shallow materialized tree
+- `files.txt`: full recursive file listing after render
+- `render-context.txt`: the resolved render target and working directory
+- `site-files.txt`: `_site` contents when present

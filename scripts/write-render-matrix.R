@@ -14,14 +14,13 @@ normalize_string <- function(x, default = "") {
 }
 
 entries <- Filter(function(entry) {
-  entry$ci$mode %in% c("local", "external", "external-template") && isTRUE(entry$ci$enabled)
+  identical(entry$ci$mode, "external-template") && isTRUE(entry$ci$enabled)
 }, manifest$entries)
 
 matrix <- list(include = lapply(entries, function(entry) {
   list(
     slug = normalize_string(entry$slug),
     name = normalize_string(entry$name),
-    kind = normalize_string(entry$kind),
     engine = normalize_string(entry$engine),
     needs_r = isTRUE(entry$ci$needs_r),
     mode = normalize_string(entry$ci$mode),
@@ -31,8 +30,7 @@ matrix <- list(include = lapply(entries, function(entry) {
     render_target = normalize_string(entry$ci$render_target, "project"),
     input = normalize_string(entry$ci$input),
     extra_files = I(as.character(unlist(entry$ci$extra_files %||% character()))),
-    output_pdf = normalize_string(entry$ci$output_pdf),
-    artifact_pdf = normalize_string(entry$ci$artifact_pdf)
+    output_pdf = normalize_string(entry$ci$output_pdf)
   )
 }))
 
