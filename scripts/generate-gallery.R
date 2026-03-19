@@ -103,6 +103,10 @@ result_link <- function(entry, field) {
   value
 }
 
+result_value <- function(entry, field, default = "") {
+  normalize_text(entry_result(entry)[[field]], default)
+}
+
 repo_label <- function(url) {
   sub("^https://github.com/", "", url)
 }
@@ -169,6 +173,12 @@ make_card <- function(entry) {
   if (identical(state_class, "failure")) {
     run_url <- result_link(entry, "run_url")
     artifact_name <- escape_html(normalize_text(entry_result(entry)$artifact_name))
+    failure_class <- escape_html(result_value(entry, "failure_class"))
+    failure_detail <- escape_html(result_value(entry, "failure_detail"))
+    if (nzchar(failure_class) || nzchar(failure_detail)) {
+      label <- paste(c(failure_class, failure_detail)[nzchar(c(failure_class, failure_detail))], collapse = ": ")
+      body_parts <- c(body_parts, sprintf("<p class=\"gallery-note\">%s</p>", label))
+    }
     if (!is.null(run_url)) {
       body_parts <- c(
         body_parts,
@@ -213,6 +223,21 @@ make_inventory_row <- function(entry) {
     repo_label(entry$repo),
     entry$repo,
     status_text(entry)
+  )
+}
+
+make_status_row <- function(entry) {
+  result <- entry_result(entry)
+  sprintf(
+    "| %s | %s | [%s](%s) | %s | %s | %s | %s |",
+    entry$name,
+    entry$category,
+    repo_label(entry$repo),
+    entry$repo,
+    normalize_text(entry$engine, "n/a"),
+    if (isTRUE(entry$ci$needs_r %||% FALSE)) "yes" else "no",
+    status_text(entry),
+    if (nzchar(normalize_text(result$pdf))) sprintf("[pdf](%s)", normalize_text(result$pdf)) else normalize_text(result$failure_class, "—")
   )
 }
 
@@ -262,6 +287,20 @@ if (length(built_entries) == 0) {
     lines <- c(lines, ":::", "")
   }
 }
+
+lines <- c(
+  lines,
+  "## Status Table",
+  "",
+  "| Entry | Category | Repo | Engine | R | Status | Sample |",
+  "| --- | --- | --- | --- | --- | --- | --- |"
+)
+
+for (entry in entries) {
+  lines <- c(lines, make_status_row(entry))
+}
+
+lines <- c(lines, "")
 
 lines <- c(lines, "## Failing Builds", "")
 

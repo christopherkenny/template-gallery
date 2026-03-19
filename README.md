@@ -32,6 +32,49 @@ Each entry in `data/template-overrides.yml` can define:
 - `ci.needs_r`: install R and the minimal CRAN packages needed by examples that execute R code.
 - `ci.extra_files`: extra assets to copy in when `quarto use template` does not materialize everything needed for the example render.
 
+## Add an entry
+
+To enable a new template or filter in CI:
+
+1. Make sure it exists in `templates.yml`.
+2. Add a matching block in `data/template-overrides.yml`.
+3. Set `engine`, `ci.install_target`, `ci.render_target`, `ci.input`, and `ci.output_pdf`.
+4. Add `ci.needs_r: true` only if the example actually executes R code.
+5. Add `ci.extra_files` only for assets that `quarto use template` does not materialize.
+
+A typical template entry looks like:
+
+```yml
+my-template:
+  slug: my-template
+  kind: template
+  engine: typst
+  ci:
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/my-template
+    path: "."
+    render_target: file
+    input: template.qmd
+    output_pdf: template.pdf
+```
+
+A typical filter entry looks like:
+
+```yml
+my-filter:
+  slug: my-filter
+  kind: filter
+  ci:
+    mode: external-template
+    enabled: true
+    install_target: christopherkenny/my-filter
+    path: "."
+    render_target: file
+    input: example.qmd
+    output_pdf: example.pdf
+```
+
 ## Render behavior
 
 The workflow assumes a Quarto CLI install-and-render path for all enabled entries:
@@ -48,7 +91,7 @@ For file renders, the workflow tries `ci.input` first. If that file is not prese
 
 Each matrix build uploads a `template-<slug>` artifact with:
 
-- `result.yml`: final status, chosen render target, and expected PDF path
+- `result.yml`: final status plus resolved render target, resolved PDF name, and any failure classification
 - `render.log`: full Quarto output
 - `render-tail.log`: the last 200 lines of render output
 - `materialize.log`: output from `quarto use template`
@@ -56,3 +99,22 @@ Each matrix build uploads a `template-<slug>` artifact with:
 - `files.txt`: full recursive file listing after render
 - `render-context.txt`: the resolved render target and working directory
 - `site-files.txt`: `_site` contents when present
+
+The most useful `result.yml` fields are:
+
+- `status`: `success`, `failure`, `missing`, or `missing-artifact`
+- `resolved_input`: the actual file rendered after any fallback from `ci.input`
+- `resolved_output_pdf`: the PDF name the workflow expected after render
+- `failure_class`: a short bucket like `materialize`, `missing-r-package`, `missing-system-library`, `latex`, or `missing-pdf`
+- `failure_detail`: the first useful matching error line from the render log
+
+## Debug a failure
+
+When an entry fails, start with the `template-<slug>` artifact:
+
+1. Check `result.yml` for `failure_class`, `resolved_input`, and `resolved_output_pdf`.
+2. Check `render-tail.log` for the actual error.
+3. Use `files.txt` to confirm what Quarto materialized and what was produced after render.
+4. Use `tree.txt` when the failure happened before render, usually during `quarto use template`.
+
+The gallery site also includes a status table so the current CI state is visible without opening the Actions run.

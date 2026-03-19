@@ -254,6 +254,10 @@ jobs:
             fi
           fi
           pdf_path="_template/${{ matrix.slug }}/${{ matrix.path }}/${expected_pdf}"
+          resolved_input=""
+          if [ -f "artifact/render-context.txt" ]; then
+            resolved_input=$(awk -F= '$1 == "render_target" { print $2 }' artifact/render-context.txt | tail -n 1)
+          fi
 
           if [ -f "${pdf_path}" ]; then
             cp "${pdf_path}" "artifact/${{ matrix.slug }}.pdf"
@@ -265,11 +269,45 @@ jobs:
             tail -n 200 "artifact/render.log" > "artifact/render-tail.log"
           fi
 
+          failure_class=""
+          failure_detail=""
+          if [ "${materialize_outcome}" = "failure" ]; then
+            failure_class="materialize"
+            failure_detail="quarto use template failed"
+          elif [ "${status}" = "missing-artifact" ]; then
+            failure_class="missing-pdf"
+            failure_detail="render completed but expected PDF was not found"
+          elif [ "${render_outcome}" = "failure" ] && [ -f "artifact/render.log" ]; then
+            if grep -qi "there is no package called" artifact/render.log; then
+              failure_class="missing-r-package"
+              failure_detail=$(grep -i -m1 "there is no package called" artifact/render.log | sed 's/^[[:space:]]*//')
+            elif grep -qi "Error executing 'Rscript'\|Failed to spawn 'Rscript'\|Rscript: command not found" artifact/render.log; then
+              failure_class="missing-r-runtime"
+              failure_detail=$(grep -i -m1 "Rscript" artifact/render.log | sed 's/^[[:space:]]*//')
+            elif grep -qi "libpng not found\|systemfonts\|textshaping\|svglite" artifact/render.log; then
+              failure_class="missing-system-library"
+              failure_detail=$(grep -i -m1 "libpng not found\|systemfonts\|textshaping\|svglite" artifact/render.log | sed 's/^[[:space:]]*//')
+            elif grep -qi "Undefined control sequence\|compilation failed- error\|LaTeX Error:" artifact/render.log; then
+              failure_class="latex"
+              failure_detail=$(grep -i -m1 "Undefined control sequence\|compilation failed- error\|LaTeX Error:" artifact/render.log | sed 's/^[[:space:]]*//')
+            elif grep -qi "typst" artifact/render.log; then
+              failure_class="typst"
+              failure_detail=$(grep -i -m1 "typst" artifact/render.log | sed 's/^[[:space:]]*//')
+            else
+              failure_class="render"
+              failure_detail=$(tail -n 1 artifact/render-tail.log 2>/dev/null || true)
+            fi
+          fi
+
           if [ -d "_template/${{ matrix.slug }}/_site" ]; then
             find "_template/${{ matrix.slug }}/_site" \( -type f -o -type d \) | sort > "artifact/site-files.txt"
           else
             printf '_site directory missing for %s\n' "${{ matrix.slug }}" > "artifact/site-files.txt"
           fi
+
+          yaml_quote() {
+            printf "'%s'" "$(printf "%s" "$1" | sed "s/'/''/g")"
+          }
 
           cat > artifact/result.yml <<YAML
           slug: ${{ matrix.slug }}
@@ -282,10 +320,14 @@ jobs:
           path: ${{ matrix.path }}
           input: ${{ matrix.input }}
           output_pdf: ${{ matrix.output_pdf }}
+          resolved_input: $(yaml_quote "${resolved_input}")
+          resolved_output_pdf: $(yaml_quote "${expected_pdf}")
           status: ${status}
           materialize_outcome: ${materialize_outcome}
           render_outcome: ${render_outcome}
-          pdf_path: ${pdf_path}
+          failure_class: $(yaml_quote "${failure_class}")
+          failure_detail: $(yaml_quote "${failure_detail}")
+          pdf_path: $(yaml_quote "${pdf_path}")
           pdf:
           YAML
 
