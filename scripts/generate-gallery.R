@@ -225,7 +225,7 @@ make_status_row <- function(entry) {
     normalize_text(entry$engine, "n/a"),
     if (isTRUE(entry$ci$needs_r %||% FALSE)) "yes" else "no",
     status_text(entry),
-    if (nzchar(normalize_text(result$pdf))) sprintf("[pdf](%s)", normalize_text(result$pdf)) else normalize_text(result$failure_class, "—")
+    if (nzchar(normalize_text(result$pdf))) sprintf("[pdf](%s)", normalize_text(result$pdf)) else ""
   )
 }
 
