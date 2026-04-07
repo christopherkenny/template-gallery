@@ -81,8 +81,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libpng-dev
 
-      - name: Install extra system libraries
-        if: toJson(matrix.extra_system_packages) != '[]'
+      - name: Install template-specific system libraries
+        if: matrix.has_extra_system_packages
         id: extra-system-packages
         continue-on-error: true
         shell: bash
@@ -96,8 +96,8 @@ jobs:
         if: matrix.needs_r
         run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2'), repos = 'https://cloud.r-project.org'); stopifnot(requireNamespace('knitr', quietly = TRUE), requireNamespace('rmarkdown', quietly = TRUE), requireNamespace('ggplot2', quietly = TRUE))"
 
-      - name: Install extra R dependencies
-        if: toJson(matrix.extra_r_packages) != '[]'
+      - name: Install template-specific R dependencies
+        if: matrix.has_extra_r_packages
         id: extra-r-packages
         continue-on-error: true
         shell: bash
@@ -154,8 +154,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ghostscript
 
-      - name: Install extra TeX packages
-        if: toJson(matrix.extra_tex_packages) != '[]'
+      - name: Install template-specific TeX dependencies
+        if: matrix.has_extra_tex_packages
         id: extra-tex-packages
         continue-on-error: true
         shell: bash
@@ -179,7 +179,7 @@ jobs:
           quarto use template "${{ matrix.install_target }}" --no-prompt > "${GITHUB_WORKSPACE}/artifact/materialize.log" 2>&1
 
       - name: Fetch extra template files
-        if: matrix.extra_files != ''
+        if: matrix.has_extra_files
         shell: bash
         run: |
           repo="${MATRIX_REPO#https://github.com/}"
@@ -228,7 +228,7 @@ jobs:
             fi
             expected_pdf="$(basename "${render_target}" .qmd).pdf"
           fi
-          if [ -n "${render_args_json}" ] && [ "${render_args_json}" != '""' ] && [ "${render_args_json}" != '[]' ]; then
+          if [ "${{ matrix.has_render_args }}" = "true" ]; then
             mapfile -t extra_args < <(printf '%s' "${render_args_json}" | jq -r '.[]')
           fi
           printf 'render_target=%s\nexpected_pdf=%s\nworking_directory=%s\n' "${render_target}" "${expected_pdf}" "$(pwd)" > "${GITHUB_WORKSPACE}/artifact/render-context.txt"
