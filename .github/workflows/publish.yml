@@ -83,6 +83,8 @@ jobs:
 
       - name: Install extra system libraries
         if: toJson(matrix.extra_system_packages) != '[]'
+        id: extra-system-packages
+        continue-on-error: true
         shell: bash
         run: |
           sudo apt-get update
@@ -96,10 +98,12 @@ jobs:
 
       - name: Install extra R dependencies
         if: toJson(matrix.extra_r_packages) != '[]'
+        id: extra-r-packages
+        continue-on-error: true
         shell: bash
         run: |
           pkgs=$(printf '%s' "${EXTRA_R_PACKAGES_JSON}" | jq -r '.[]' | sed "s/.*/'&'/" | paste -sd, -)
-          Rscript -e "pkgs <- c(${pkgs}); install.packages(pkgs, repos = 'https://cloud.r-project.org'); invisible(vapply(pkgs, function(pkg) stopifnot(requireNamespace(pkg, quietly = TRUE)), logical(1)))"
+          Rscript -e "pkgs <- c(${pkgs}); install.packages(pkgs, repos = 'https://cloud.r-project.org'); stopifnot(all(vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)))"
         env:
           EXTRA_R_PACKAGES_JSON: ${{ toJson(matrix.extra_r_packages) }}
 
@@ -152,6 +156,8 @@ jobs:
 
       - name: Install extra TeX packages
         if: toJson(matrix.extra_tex_packages) != '[]'
+        id: extra-tex-packages
+        continue-on-error: true
         shell: bash
         run: |
           printf '%s' "${EXTRA_TEX_PACKAGES_JSON}" | jq -r '.[]' | xargs -r tlmgr install
@@ -202,7 +208,7 @@ jobs:
           fi
 
       - name: Render template example
-        if: steps.materialize-template.outcome == 'success'
+        if: steps.materialize-template.outcome == 'success' && steps.extra-system-packages.outcome != 'failure' && steps.extra-r-packages.outcome != 'failure' && steps.extra-tex-packages.outcome != 'failure'
         id: render-template
         continue-on-error: true
         shell: bash
@@ -246,9 +252,14 @@ jobs:
         shell: bash
         run: |
           status="missing"
+          extra_system_outcome="${{ steps.extra-system-packages.outcome }}"
+          extra_r_outcome="${{ steps.extra-r-packages.outcome }}"
+          extra_tex_outcome="${{ steps.extra-tex-packages.outcome }}"
           materialize_outcome="${{ steps.materialize-template.outcome }}"
           render_outcome="${{ steps.render-template.outcome }}"
-          if [ "${materialize_outcome}" = "failure" ] && [ "${render_outcome}" != "success" ]; then
+          if [ "${extra_system_outcome}" = "failure" ] || [ "${extra_r_outcome}" = "failure" ] || [ "${extra_tex_outcome}" = "failure" ]; then
+            render_outcome="failure"
+          elif [ "${materialize_outcome}" = "failure" ] && [ "${render_outcome}" != "success" ]; then
             render_outcome="failure"
           fi
 
@@ -283,7 +294,16 @@ jobs:
 
           failure_class=""
           failure_detail=""
-          if [ "${materialize_outcome}" = "failure" ]; then
+          if [ "${extra_system_outcome}" = "failure" ]; then
+            failure_class="setup-system-library"
+            failure_detail="failed to install extra system libraries"
+          elif [ "${extra_r_outcome}" = "failure" ]; then
+            failure_class="setup-r-package"
+            failure_detail="failed to install extra R dependencies"
+          elif [ "${extra_tex_outcome}" = "failure" ]; then
+            failure_class="setup-tex-package"
+            failure_detail="failed to install extra TeX packages"
+          elif [ "${materialize_outcome}" = "failure" ]; then
             failure_class="materialize"
             failure_detail="quarto use template failed"
           elif [ "${status}" = "missing-artifact" ]; then
