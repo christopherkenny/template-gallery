@@ -2,6 +2,7 @@ args <- commandArgs(trailingOnly = TRUE)
 manifest_path <- if (length(args) >= 1) args[[1]] else "data/template-manifest.yml"
 results_path <- if (length(args) >= 2) args[[2]] else "data/build-results.yml"
 output_path <- if (length(args) >= 3) args[[3]] else "index.qmd"
+meta_path <- if (length(args) >= 4) args[[4]] else "data/build-meta.yml"
 
 suppressPackageStartupMessages(library(yaml))
 
@@ -11,6 +12,7 @@ build_results <- if (file.exists(results_path)) {
 } else {
   list(summary = list(success = 0L, failure = 0L, missing = 0L), results = list())
 }
+build_meta <- if (file.exists(meta_path)) yaml::read_yaml(meta_path) else list()
 
 entries <- manifest$entries
 categories <- unique(vapply(entries, function(entry) entry$category, character(1)))
@@ -240,7 +242,10 @@ lines <- c(
   "---",
   "",
   "::: {.gallery-lede}",
-  "Sample PDFs from the latest CI run.",
+  sprintf(
+    "Sample PDFs from the latest CI run. Built with Quarto %s.",
+    normalize_text(build_meta$quarto_version, "unknown")
+  ),
   ":::",
   "",
   "::: {.gallery-summary}",
