@@ -3,10 +3,6 @@ manifest_path <- if (length(args) >= 1) args[[1]] else "data/template-manifest.y
 
 suppressPackageStartupMessages(library(yaml))
 
-`%||%` <- function(x, y) {
-  if (is.null(x)) y else x
-}
-
 manifest <- yaml::read_yaml(manifest_path)
 
 if (!identical(manifest$schema_version, 1L) && !identical(manifest$schema_version, 1)) {
@@ -19,9 +15,14 @@ if (length(entries) == 0) {
 }
 
 required_fields <- c("slug", "name", "category", "description", "repo", "type", "kind")
-slugs <- character()
-categories <- list()
+slugs <- vapply(entries, function(entry) entry$slug, character(1))
+categories <- table(vapply(entries, function(entry) entry$category, character(1)))
 enabled_builds <- 0L
+
+if (anyDuplicated(slugs)) {
+  duplicate_slug <- slugs[duplicated(slugs)][[1]]
+  stop(sprintf("Duplicate slug found: %s", duplicate_slug), call. = FALSE)
+}
 
 for (entry in entries) {
   missing_fields <- required_fields[vapply(required_fields, function(field) {
@@ -32,11 +33,6 @@ for (entry in entries) {
     stop(sprintf("Entry is missing required fields: %s", paste(missing_fields, collapse = ", ")), call. = FALSE)
   }
 
-  if (entry$slug %in% slugs) {
-    stop(sprintf("Duplicate slug found: %s", entry$slug), call. = FALSE)
-  }
-  slugs <- c(slugs, entry$slug)
-
   if (is.null(entry$badges) || length(entry$badges) == 0) {
     stop(sprintf('Entry "%s" must have a non-empty badges array.', entry$slug), call. = FALSE)
   }
@@ -44,8 +40,6 @@ for (entry in entries) {
   if (is.null(entry$ci) || !is.list(entry$ci)) {
     stop(sprintf('Entry "%s" must define a ci block.', entry$slug), call. = FALSE)
   }
-
-  categories[[entry$category]] <- (categories[[entry$category]] %||% 0L) + 1L
 
   if (isTRUE(entry$ci$enabled)) {
     if (!identical(entry$ci$mode, "external-template")) {

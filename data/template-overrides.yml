@@ -3,12 +3,9 @@ annual-reviews:
   kind: template
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     needs_r: true
     install_target: christopherkenny/annual-reviews
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 apsr:
@@ -16,12 +13,9 @@ apsr:
   kind: template
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     needs_r: true
     install_target: christopherkenny/apsr
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 cambridge-medium:
@@ -29,11 +23,8 @@ cambridge-medium:
   kind: template
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/cambridge-medium
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 nature:
@@ -41,11 +32,8 @@ nature:
   kind: template
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/nature
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 pnas:
@@ -53,12 +41,9 @@ pnas:
   kind: template
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     needs_r: true
     install_target: christopherkenny/pnas
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 pnas-si:
@@ -66,12 +51,9 @@ pnas-si:
   kind: template
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     needs_r: true
     install_target: christopherkenny/pnas-si
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 scientific-data:
@@ -79,11 +61,8 @@ scientific-data:
   kind: template
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/scientific-data
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 perspectives:
@@ -91,12 +70,9 @@ perspectives:
   kind: template
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     needs_r: true
     install_target: christopherkenny/perspectives
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 oup:
@@ -104,12 +80,9 @@ oup:
   kind: template
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     needs_r: true
     install_target: christopherkenny/oup
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 now:
@@ -117,12 +90,9 @@ now:
   kind: template
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     needs_r: true
     install_target: christopherkenny/now
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 wordcount:
@@ -130,56 +100,41 @@ wordcount:
   kind: filter
   engine: latex
   ci:
-    mode: external-template
     enabled: true
     needs_r: true
     install_target: christopherkenny/wordcount
-    path: "."
-    render_target: file
     input: example.qmd
     output_pdf: example.pdf
 typst-function:
   slug: typst-function
   kind: filter
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/typst-function
-    path: "."
-    render_target: file
     input: example.qmd
     output_pdf: example.pdf
 spellcheck:
   slug: spellcheck
   kind: filter
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/spellcheck
-    path: "."
-    render_target: file
     input: example.qmd
     output_pdf: example.pdf
 typst-refs:
   slug: typst-refs
   kind: filter
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/typst-refs
-    path: "."
-    render_target: file
     input: example.qmd
     output_pdf: example.pdf
 pseudocode:
   slug: pseudocode
   kind: filter
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/pseudocode
-    path: "."
-    render_target: file
     input: example.qmd
     output_pdf: example.pdf
 tufte:
@@ -187,11 +142,8 @@ tufte:
   kind: template
   engine: typst
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/tufte
-    path: "."
-    render_target: file
     input: tufte.qmd
     output_pdf: tufte.pdf
 ctk-article:
@@ -199,12 +151,9 @@ ctk-article:
   kind: template
   engine: typst
   ci:
-    mode: external-template
     enabled: true
     needs_r: true
     install_target: christopherkenny/ctk-article
-    path: "."
-    render_target: file
     input: ctk-article.qmd
     output_pdf: ctk-article.pdf
 ctk-memo:
@@ -212,11 +161,8 @@ ctk-memo:
   kind: template
   engine: typst
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/ctk-memo
-    path: "."
-    render_target: file
     input: ctk-memo.qmd
     output_pdf: ctk-memo.pdf
 ctk-syllabus:
@@ -224,11 +170,8 @@ ctk-syllabus:
   kind: template
   engine: typst
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/ctk-syllabus
-    path: "."
-    render_target: file
     input: ctk-syllabus.qmd
     output_pdf: ctk-syllabus.pdf
     extra_files:
@@ -238,11 +181,8 @@ ctk-legal:
   kind: template
   engine: typst
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/ctk-legal
-    path: "."
-    render_target: file
     input: ctk-legal.qmd
     output_pdf: ctk-legal.pdf
 ctk-invoice:
@@ -250,11 +190,8 @@ ctk-invoice:
   kind: template
   engine: typst
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/ctk-invoice
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 quarto-cv:
@@ -262,11 +199,8 @@ quarto-cv:
   kind: template
   engine: typst
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/quarto-cv
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 projector:
@@ -274,11 +208,8 @@ projector:
   kind: template
   engine: typst
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/projector
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
     extra_files:
@@ -288,10 +219,7 @@ harvard-diss:
   kind: template
   engine: typst
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/harvard-diss
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf

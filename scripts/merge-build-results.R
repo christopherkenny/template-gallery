@@ -7,18 +7,22 @@ suppressPackageStartupMessages(library(yaml))
 
 dir.create(pdf_root, recursive = TRUE, showWarnings = FALSE)
 
-results <- list()
-success <- 0L
-failure <- 0L
-missing <- 0L
+status_bucket <- function(status) {
+  if (identical(status, "success")) {
+    return("success")
+  }
+  if (identical(status, "failure")) {
+    return("failure")
+  }
+  "missing"
+}
 
 if (dir.exists(artifacts_root)) {
   artifact_dirs <- list.dirs(artifacts_root, recursive = FALSE, full.names = TRUE)
-
-  for (artifact_dir in artifact_dirs) {
+  artifact_results <- Filter(Negate(is.null), lapply(artifact_dirs, function(artifact_dir) {
     result_path <- file.path(artifact_dir, "result.yml")
     if (!file.exists(result_path)) {
-      next
+      return(NULL)
     }
 
     result <- yaml::read_yaml(result_path)
@@ -29,17 +33,17 @@ if (dir.exists(artifacts_root)) {
       result$pdf <- sprintf("assets/pdfs/%s.pdf", result$slug)
     }
 
-    if (identical(result$status, "success")) {
-      success <- success + 1L
-    } else if (identical(result$status, "failure")) {
-      failure <- failure + 1L
-    } else {
-      missing <- missing + 1L
-    }
-
-    results[[result$slug]] <- result
-  }
+    result
+  }))
+} else {
+  artifact_results <- list()
 }
+
+results <- setNames(artifact_results, vapply(artifact_results, function(result) result$slug, character(1)))
+status_buckets <- vapply(artifact_results, function(result) status_bucket(result$status), character(1))
+success <- sum(status_buckets == "success")
+failure <- sum(status_buckets == "failure")
+missing <- sum(status_buckets == "missing")
 
 payload <- list(
   generated_at = format(Sys.time(), tz = "UTC", usetz = TRUE),

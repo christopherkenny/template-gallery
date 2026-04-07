@@ -4,10 +4,6 @@ results_path <- if (length(args) >= 2) args[[2]] else "data/build-results.yml"
 
 suppressPackageStartupMessages(library(yaml))
 
-`%||%` <- function(x, y) {
-  if (is.null(x)) y else x
-}
-
 manifest <- yaml::read_yaml(manifest_path)
 results <- yaml::read_yaml(results_path)
 

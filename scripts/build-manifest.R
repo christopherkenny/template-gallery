@@ -5,10 +5,6 @@ output_path <- if (length(args) >= 3) args[[3]] else "data/template-manifest.yml
 
 suppressPackageStartupMessages(library(yaml))
 
-`%||%` <- function(x, y) {
-  if (is.null(x)) y else x
-}
-
 repo_name_from_url <- function(url) {
   sub("^.*/", "", url)
 }
@@ -16,14 +12,21 @@ repo_name_from_url <- function(url) {
 source_data <- yaml::read_yaml(source_path)
 overrides <- yaml::read_yaml(overrides_path)
 
-entries <- list()
+default_ci <- list(
+  mode = "external-template",
+  enabled = FALSE,
+  reason = "Not enabled in CI.",
+  path = ".",
+  render_target = "file"
+)
 
-for (group in source_data) {
-  for (extension in group$extensions) {
+entries <- unlist(lapply(source_data, function(group) {
+  lapply(group$extensions, function(extension) {
     repo_name <- repo_name_from_url(extension$link)
     override <- overrides[[repo_name]] %||% list()
+    ci_override <- override$ci %||% list()
 
-    entry <- list(
+    list(
       slug = override$slug %||% repo_name,
       name = extension$name,
       category = group$category,
@@ -34,16 +37,10 @@ for (group in source_data) {
       badges = override$badges %||% extension$badges %||% list(),
       kind = override$kind %||% "template",
       engine = override$engine,
-      ci = override$ci %||% list(
-        mode = "external-template",
-        enabled = FALSE,
-        reason = "Not enabled in CI."
-      )
+      ci = modifyList(default_ci, ci_override)
     )
-
-    entries[[length(entries) + 1L]] <- entry
-  }
-}
+  })
+}), recursive = FALSE, use.names = FALSE)
 
 manifest <- list(
   schema_version = 1,

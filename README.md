@@ -19,18 +19,21 @@ The manifest intentionally includes the full known template list, even when an e
 
 ## Override fields
 
-Each entry in `data/template-overrides.yml` can define:
+Most entries only need these fields in `data/template-overrides.yml`:
 
 - `engine`: `typst` or `latex`. This controls extra setup like fonts or TinyTeX.
-- `ci.mode`: currently always `external-template`. The workflow installs the repo with the Quarto CLI instead of using a vendored local copy.
 - `ci.enabled`: whether that entry should be part of the CI build matrix.
 - `ci.install_target`: the value passed to `quarto use template`.
-- `ci.path`: subdirectory inside the materialized template to render. Most entries use `"."`.
-- `ci.render_target`: usually `file`. This tells the workflow to render a specific `.qmd` rather than the whole directory.
 - `ci.input`: the preferred `.qmd` filename to render.
 - `ci.output_pdf`: the expected PDF output path relative to `ci.path`.
 - `ci.needs_r`: install R and the minimal CRAN packages needed by examples that execute R code.
 - `ci.extra_files`: extra assets to copy in when `quarto use template` does not materialize everything needed for the example render.
+
+These CI defaults are filled in automatically and usually do not need to be written per entry:
+
+- `ci.mode: external-template`
+- `ci.path: "."`
+- `ci.render_target: file`
 
 ## Add an entry
 
@@ -38,9 +41,10 @@ To enable a new template or filter in CI:
 
 1. Make sure it exists in `templates.yml`.
 2. Add a matching block in `data/template-overrides.yml`.
-3. Set `engine`, `ci.install_target`, `ci.render_target`, `ci.input`, and `ci.output_pdf`.
-4. Add `ci.needs_r: true` only if the example actually executes R code.
-5. Add `ci.extra_files` only for assets that `quarto use template` does not materialize.
+3. Set `engine`, `ci.install_target`, `ci.input`, and `ci.output_pdf`.
+4. Skip `ci.mode`, `ci.path`, and `ci.render_target` unless an entry truly needs something unusual.
+5. Add `ci.needs_r: true` only if the example actually executes R code.
+6. Add `ci.extra_files` only for assets that `quarto use template` does not materialize.
 
 A typical template entry looks like:
 
@@ -50,11 +54,8 @@ my-template:
   kind: template
   engine: typst
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/my-template
-    path: "."
-    render_target: file
     input: template.qmd
     output_pdf: template.pdf
 ```
@@ -66,11 +67,8 @@ my-filter:
   slug: my-filter
   kind: filter
   ci:
-    mode: external-template
     enabled: true
     install_target: christopherkenny/my-filter
-    path: "."
-    render_target: file
     input: example.qmd
     output_pdf: example.pdf
 ```
@@ -89,16 +87,13 @@ For file renders, the workflow tries `ci.input` first. If that file is not prese
 
 ## Artifacts
 
-Each matrix build uploads a `template-<slug>` artifact with:
+Each matrix build uploads a `template-<slug>` artifact. The three files to check first are:
 
-- `result.yml`: final status plus resolved render target, resolved PDF name, and any failure classification
-- `render.log`: full Quarto output
+- `result.yml`: final status plus resolved render target, resolved PDF name, and failure classification
 - `render-tail.log`: the last 200 lines of render output
-- `materialize.log`: output from `quarto use template`
-- `tree.txt`: shallow materialized tree
 - `files.txt`: full recursive file listing after render
-- `render-context.txt`: the resolved render target and working directory
-- `site-files.txt`: `_site` contents when present
+
+The artifact also includes `render.log`, `materialize.log`, `tree.txt`, `render-context.txt`, and `site-files.txt` for deeper debugging.
 
 The most useful `result.yml` fields are:
 

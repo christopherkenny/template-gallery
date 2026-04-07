@@ -5,10 +5,6 @@ output_path <- if (length(args) >= 3) args[[3]] else "index.qmd"
 
 suppressPackageStartupMessages(library(yaml))
 
-`%||%` <- function(x, y) {
-  if (is.null(x)) y else x
-}
-
 manifest <- yaml::read_yaml(manifest_path)
 build_results <- if (file.exists(results_path)) {
   yaml::read_yaml(results_path)
@@ -68,16 +64,6 @@ status_text <- function(entry) {
   }
 
   normalize_text(entry$ci$reason, "Pending")
-}
-
-mode_text <- function(entry) {
-  mode <- normalize_text(entry$ci$mode, "unknown")
-
-  if (identical(mode, "external-template")) {
-    return("Quarto CLI")
-  }
-
-  "Pending"
 }
 
 badge_values <- function(entry) {
@@ -243,6 +229,10 @@ make_status_row <- function(entry) {
 
 built_entries <- Filter(function(entry) !is.null(pdf_link(entry)), entries)
 failing_entries <- Filter(function(entry) identical(status_class(entry), "failure"), entries)
+grouped_entries <- lapply(categories, function(category) {
+  Filter(function(entry) identical(entry$category, category), entries)
+})
+names(grouped_entries) <- categories
 
 lines <- c(
   "---",
@@ -272,9 +262,7 @@ if (length(built_entries) == 0) {
   )
 } else {
   for (category in categories) {
-    category_entries <- Filter(function(entry) {
-      identical(entry$category, category) && !is.null(pdf_link(entry))
-    }, built_entries)
+    category_entries <- Filter(function(entry) !is.null(pdf_link(entry)), grouped_entries[[category]])
 
     if (length(category_entries) == 0) {
       next
@@ -308,9 +296,7 @@ if (length(failing_entries) == 0) {
   lines <- c(lines, "No enabled entries are currently failing CI.", "")
 } else {
   for (category in categories) {
-    category_entries <- Filter(function(entry) {
-      identical(entry$category, category) && identical(status_class(entry), "failure")
-    }, failing_entries)
+    category_entries <- Filter(function(entry) identical(status_class(entry), "failure"), grouped_entries[[category]])
 
     if (length(category_entries) == 0) {
       next
@@ -327,11 +313,10 @@ if (length(failing_entries) == 0) {
 for (category in categories) {
   category_entries <- Filter(
     function(entry) {
-      identical(entry$category, category) &&
         is.null(pdf_link(entry)) &&
         !identical(status_class(entry), "failure")
     },
-    entries
+    grouped_entries[[category]]
   )
 
   if (length(category_entries) == 0) {
