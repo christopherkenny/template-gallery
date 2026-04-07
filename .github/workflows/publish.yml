@@ -82,7 +82,7 @@ jobs:
           sudo apt-get install -y libpng-dev
 
       - name: Install extra system libraries
-        if: matrix.extra_system_packages != ''
+        if: toJson(matrix.extra_system_packages) != '[]'
         shell: bash
         run: |
           sudo apt-get update
@@ -95,7 +95,7 @@ jobs:
         run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2'), repos = 'https://cloud.r-project.org'); stopifnot(requireNamespace('knitr', quietly = TRUE), requireNamespace('rmarkdown', quietly = TRUE), requireNamespace('ggplot2', quietly = TRUE))"
 
       - name: Install extra R dependencies
-        if: matrix.extra_r_packages != ''
+        if: toJson(matrix.extra_r_packages) != '[]'
         shell: bash
         run: |
           pkgs=$(printf '%s' "${EXTRA_R_PACKAGES_JSON}" | jq -r '.[]' | sed "s/.*/'&'/" | paste -sd, -)
@@ -151,7 +151,7 @@ jobs:
           sudo apt-get install -y ghostscript
 
       - name: Install extra TeX packages
-        if: matrix.extra_tex_packages != ''
+        if: toJson(matrix.extra_tex_packages) != '[]'
         shell: bash
         run: |
           printf '%s' "${EXTRA_TEX_PACKAGES_JSON}" | jq -r '.[]' | xargs -r tlmgr install
@@ -170,7 +170,7 @@ jobs:
         run: |
           mkdir -p "_template/${{ matrix.slug }}"
           cd "_template/${{ matrix.slug }}"
-          quarto use template "${{ matrix.install_target }}" --no-prompt 2>&1 | tee "${GITHUB_WORKSPACE}/artifact/materialize.log"
+          quarto use template "${{ matrix.install_target }}" --no-prompt > "${GITHUB_WORKSPACE}/artifact/materialize.log" 2>&1
 
       - name: Fetch extra template files
         if: matrix.extra_files != ''
@@ -226,7 +226,7 @@ jobs:
             mapfile -t extra_args < <(printf '%s' "${render_args_json}" | jq -r '.[]')
           fi
           printf 'render_target=%s\nexpected_pdf=%s\nworking_directory=%s\n' "${render_target}" "${expected_pdf}" "$(pwd)" > "${GITHUB_WORKSPACE}/artifact/render-context.txt"
-          quarto render "${render_target}" "${extra_args[@]}" 2>&1 | tee "${GITHUB_WORKSPACE}/artifact/render.log"
+          quarto render "${render_target}" "${extra_args[@]}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
 
       - name: Capture recursive file list
         if: always()
@@ -346,6 +346,11 @@ jobs:
           {
             echo "status=${status}"
             echo "failure_class=${failure_class}"
+            echo "resolved_input=${resolved_input}"
+            echo "resolved_output_pdf=${expected_pdf}"
+            echo "failure_detail<<EOF"
+            printf '%s\n' "${failure_detail}"
+            echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
       - name: Upload build artifact
@@ -364,10 +369,23 @@ jobs:
           if [ -n "${{ steps.collect.outputs.failure_class }}" ]; then
             echo "Failure class: ${{ steps.collect.outputs.failure_class }}"
           fi
+          if [ -n "${{ steps.collect.outputs.failure_detail }}" ]; then
+            echo "Failure detail: ${{ steps.collect.outputs.failure_detail }}"
+          fi
+          if [ -n "${{ steps.collect.outputs.resolved_input }}" ]; then
+            echo "Resolved input: ${{ steps.collect.outputs.resolved_input }}"
+          fi
+          if [ -n "${{ steps.collect.outputs.resolved_output_pdf }}" ]; then
+            echo "Expected PDF: ${{ steps.collect.outputs.resolved_output_pdf }}"
+          fi
           if [ -f artifact/render-tail.log ]; then
             echo ""
             echo "--- render-tail.log ---"
             cat artifact/render-tail.log
+          elif [ -f artifact/render.log ]; then
+            echo ""
+            echo "--- render.log (tail) ---"
+            tail -n 200 artifact/render.log
           elif [ -f artifact/materialize.log ]; then
             echo ""
             echo "--- materialize.log ---"
