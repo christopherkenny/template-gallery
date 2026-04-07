@@ -81,20 +81,27 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libpng-dev
 
-      - name: Install APSR system libraries
-        if: matrix.slug == 'apsr'
+      - name: Install extra system libraries
+        if: matrix.extra_system_packages != ''
         shell: bash
         run: |
           sudo apt-get update
-          sudo apt-get install -y libfontconfig1-dev libcairo2-dev libharfbuzz-dev libfribidi-dev
+          printf '%s' "${EXTRA_SYSTEM_PACKAGES_JSON}" | jq -r '.[]' | xargs -r sudo apt-get install -y
+        env:
+          EXTRA_SYSTEM_PACKAGES_JSON: ${{ toJson(matrix.extra_system_packages) }}
 
       - name: Install R dependencies
         if: matrix.needs_r
         run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2'), repos = 'https://cloud.r-project.org'); stopifnot(requireNamespace('knitr', quietly = TRUE), requireNamespace('rmarkdown', quietly = TRUE), requireNamespace('ggplot2', quietly = TRUE))"
 
-      - name: Install APSR-specific R dependencies
-        if: matrix.slug == 'apsr'
-        run: Rscript -e "install.packages('kableExtra', repos = 'https://cloud.r-project.org'); stopifnot(requireNamespace('kableExtra', quietly = TRUE))"
+      - name: Install extra R dependencies
+        if: matrix.extra_r_packages != ''
+        shell: bash
+        run: |
+          pkgs=$(printf '%s' "${EXTRA_R_PACKAGES_JSON}" | jq -r '.[]' | sed "s/.*/'&'/" | paste -sd, -)
+          Rscript -e "pkgs <- c(${pkgs}); install.packages(pkgs, repos = 'https://cloud.r-project.org'); invisible(vapply(pkgs, function(pkg) stopifnot(requireNamespace(pkg, quietly = TRUE)), logical(1)))"
+        env:
+          EXTRA_R_PACKAGES_JSON: ${{ toJson(matrix.extra_r_packages) }}
 
       - name: Cache fonts
         if: matrix.engine == 'typst'
@@ -143,10 +150,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ghostscript
 
-      - name: Install APSR TeX dependencies
-        if: matrix.slug == 'apsr'
+      - name: Install extra TeX packages
+        if: matrix.extra_tex_packages != ''
         shell: bash
-        run: tlmgr install pgf
+        run: |
+          printf '%s' "${EXTRA_TEX_PACKAGES_JSON}" | jq -r '.[]' | xargs -r tlmgr install
+        env:
+          EXTRA_TEX_PACKAGES_JSON: ${{ toJson(matrix.extra_tex_packages) }}
 
       - name: Prepare artifact directory
         if: always()
@@ -160,7 +170,7 @@ jobs:
         run: |
           mkdir -p "_template/${{ matrix.slug }}"
           cd "_template/${{ matrix.slug }}"
-          quarto use template "${{ matrix.install_target }}" --no-prompt > "${GITHUB_WORKSPACE}/artifact/materialize.log" 2>&1
+          quarto use template "${{ matrix.install_target }}" --no-prompt 2>&1 | tee "${GITHUB_WORKSPACE}/artifact/materialize.log"
 
       - name: Fetch extra template files
         if: matrix.extra_files != ''
@@ -201,6 +211,7 @@ jobs:
           render_target="."
           expected_pdf="${{ matrix.output_pdf }}"
           extra_args=()
+          render_args_json='${{ toJson(matrix.render_args) }}'
           if [ "${{ matrix.render_target }}" = "file" ] && [ -n "${{ matrix.input }}" ]; then
             render_target="${{ matrix.input }}"
             if [ ! -f "${render_target}" ]; then
@@ -211,14 +222,11 @@ jobs:
             fi
             expected_pdf="$(basename "${render_target}" .qmd).pdf"
           fi
-          if [ "${{ matrix.slug }}" = "annual-reviews" ]; then
-            extra_args+=(--pdf-engine pdflatex)
-          fi
-          if [ "${{ matrix.slug }}" = "perspectives" ] || [ "${{ matrix.slug }}" = "annual-reviews" ]; then
-            extra_args+=(-M classoption=numbers)
+          if [ -n "${render_args_json}" ] && [ "${render_args_json}" != '""' ] && [ "${render_args_json}" != '[]' ]; then
+            mapfile -t extra_args < <(printf '%s' "${render_args_json}" | jq -r '.[]')
           fi
           printf 'render_target=%s\nexpected_pdf=%s\nworking_directory=%s\n' "${render_target}" "${expected_pdf}" "$(pwd)" > "${GITHUB_WORKSPACE}/artifact/render-context.txt"
-          quarto render "${render_target}" "${extra_args[@]}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
+          quarto render "${render_target}" "${extra_args[@]}" 2>&1 | tee "${GITHUB_WORKSPACE}/artifact/render.log"
 
       - name: Capture recursive file list
         if: always()
@@ -233,6 +241,7 @@ jobs:
           fi
 
       - name: Collect build outputs
+        id: collect
         if: always()
         shell: bash
         run: |
@@ -334,6 +343,11 @@ jobs:
           pdf:
           YAML
 
+          {
+            echo "status=${status}"
+            echo "failure_class=${failure_class}"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Upload build artifact
         if: always()
         uses: actions/upload-artifact@v6
@@ -341,6 +355,25 @@ jobs:
           name: template-${{ matrix.slug }}
           path: artifact
           if-no-files-found: error
+
+      - name: Fail job with surfaced error
+        if: always() && steps.collect.outputs.status != 'success'
+        shell: bash
+        run: |
+          echo "Template build failed for ${{ matrix.slug }}"
+          if [ -n "${{ steps.collect.outputs.failure_class }}" ]; then
+            echo "Failure class: ${{ steps.collect.outputs.failure_class }}"
+          fi
+          if [ -f artifact/render-tail.log ]; then
+            echo ""
+            echo "--- render-tail.log ---"
+            cat artifact/render-tail.log
+          elif [ -f artifact/materialize.log ]; then
+            echo ""
+            echo "--- materialize.log ---"
+            tail -n 200 artifact/materialize.log
+          fi
+          exit 1
 
   build-site:
     name: Build Site

@@ -63,6 +63,19 @@ for (entry in entries) {
       stop(sprintf('File-render entry "%s" must define ci.input.', entry$slug), call. = FALSE)
     }
 
+    list_fields <- c("extra_files", "extra_system_packages", "extra_r_packages", "extra_tex_packages", "render_args")
+    invalid_list_fields <- list_fields[vapply(list_fields, function(field) {
+      value <- entry$ci[[field]]
+      !is.null(value) && !(is.atomic(value) || is.list(value))
+    }, logical(1))]
+
+    if (length(invalid_list_fields) > 0) {
+      stop(sprintf('Entry "%s" must define ci.%s as scalar or vector values.',
+        entry$slug,
+        paste(invalid_list_fields, collapse = ", ci.")
+      ), call. = FALSE)
+    }
+
     enabled_builds <- enabled_builds + 1L
   }
 }

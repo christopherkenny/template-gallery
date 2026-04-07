@@ -8,6 +8,11 @@ annual-reviews:
     install_target: christopherkenny/annual-reviews
     input: template.qmd
     output_pdf: template.pdf
+    render_args:
+      - --pdf-engine
+      - pdflatex
+      - -M
+      - classoption=numbers
 apsr:
   slug: apsr
   kind: template
@@ -18,6 +23,15 @@ apsr:
     install_target: christopherkenny/apsr
     input: template.qmd
     output_pdf: template.pdf
+    extra_system_packages:
+      - libfontconfig1-dev
+      - libcairo2-dev
+      - libharfbuzz-dev
+      - libfribidi-dev
+    extra_r_packages:
+      - kableExtra
+    extra_tex_packages:
+      - pgf
 cambridge-medium:
   slug: cambridge-medium
   kind: template
@@ -75,6 +89,9 @@ perspectives:
     install_target: christopherkenny/perspectives
     input: template.qmd
     output_pdf: template.pdf
+    render_args:
+      - -M
+      - classoption=numbers
 oup:
   slug: oup
   kind: template

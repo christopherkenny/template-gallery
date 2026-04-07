@@ -30,7 +30,11 @@ matrix <- list(include = lapply(entries, function(entry) {
     render_target = normalize_string(entry$ci$render_target, "project"),
     input = normalize_string(entry$ci$input),
     extra_files = I(as.character(unlist(entry$ci$extra_files %||% character()))),
-    output_pdf = normalize_string(entry$ci$output_pdf)
+    output_pdf = normalize_string(entry$ci$output_pdf),
+    extra_system_packages = I(as.character(unlist(entry$ci$extra_system_packages %||% character()))),
+    extra_r_packages = I(as.character(unlist(entry$ci$extra_r_packages %||% character()))),
+    extra_tex_packages = I(as.character(unlist(entry$ci$extra_tex_packages %||% character()))),
+    render_args = I(as.character(unlist(entry$ci$render_args %||% character())))
   )
 }))
 

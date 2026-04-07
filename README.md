@@ -35,6 +35,13 @@ These CI defaults are filled in automatically and usually do not need to be writ
 - `ci.path: "."`
 - `ci.render_target: file`
 
+For unusual templates, there are a few optional advanced fields:
+
+- `ci.extra_system_packages`: extra Ubuntu packages to install before rendering
+- `ci.extra_r_packages`: extra CRAN packages needed only for a specific template
+- `ci.extra_tex_packages`: extra TinyTeX packages to install
+- `ci.render_args`: extra arguments passed to `quarto render`
+
 ## Add an entry
 
 To enable a new template or filter in CI:
