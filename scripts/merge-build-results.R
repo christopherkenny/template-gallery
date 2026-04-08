@@ -46,7 +46,6 @@ failure <- sum(status_buckets == "failure")
 missing <- sum(status_buckets == "missing")
 
 payload <- list(
-  generated_at = format(Sys.time(), tz = "UTC", usetz = TRUE),
   summary = list(success = success, failure = failure, missing = missing),
   results = results
 )

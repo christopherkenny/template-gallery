@@ -4,6 +4,8 @@ results_path <- if (length(args) >= 2) args[[2]] else "data/build-results.yml"
 
 suppressPackageStartupMessages(library(yaml))
 
+source(file.path("scripts", "utils.R"))
+
 manifest <- yaml::read_yaml(manifest_path)
 results <- yaml::read_yaml(results_path)
 
@@ -17,8 +19,16 @@ status_label <- function(result) {
   result$status
 }
 
-mode_label <- function(entry) {
-  entry$ci$mode %||% "unknown"
+build_label <- function(entry) {
+  if (!is_ci_enabled(entry)) {
+    return("not enabled")
+  }
+
+  if (identical(entry$kind %||% "", "filter")) {
+    return("filter")
+  }
+
+  "template"
 }
 
 lines <- c(
@@ -29,7 +39,7 @@ lines <- c(
   sprintf("- Missing: %d", results$summary$missing %||% 0L),
   "- The site is still rendered from the latest run even when some entries fail.",
   "",
-  "| Template | Mode | Status | PDF |",
+  "| Template | Build | Status | PDF |",
   "| --- | --- | --- | --- |"
 )
 
@@ -39,7 +49,7 @@ for (slug in result_slugs) {
   pdf_text <- if (!is.null(result$pdf) && nzchar(result$pdf)) sprintf("[pdf](%s)", result$pdf) else ""
   lines <- c(
     lines,
-    sprintf("| %s | %s | %s | %s |", entry$name, mode_label(entry), status_label(result), pdf_text)
+    sprintf("| %s | %s | %s | %s |", entry$name, build_label(entry), status_label(result), pdf_text)
   )
 }
 

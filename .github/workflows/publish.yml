@@ -198,15 +198,6 @@ jobs:
           MATRIX_REPO: ${{ matrix.repo }}
           MATRIX_PATH: ${{ matrix.path }}
 
-      - name: Capture materialized tree
-        shell: bash
-        run: |
-          if [ -d "_template/${{ matrix.slug }}" ]; then
-            find "_template/${{ matrix.slug }}" -maxdepth 3 \( -type f -o -type d \) | sort > artifact/tree.txt
-          else
-            printf 'materialized directory missing: _template/%s\n' "${{ matrix.slug }}" > artifact/tree.txt
-          fi
-
       - name: Render template example
         if: steps.materialize-template.outcome == 'success' && steps.extra-system-packages.outcome != 'failure' && steps.extra-r-packages.outcome != 'failure' && steps.extra-tex-packages.outcome != 'failure'
         id: render-template
@@ -231,7 +222,10 @@ jobs:
           if [ "${{ matrix.has_render_args }}" = "true" ]; then
             mapfile -t extra_args < <(printf '%s' "${render_args_json}" | jq -r '.[]')
           fi
-          printf 'render_target=%s\nexpected_pdf=%s\nworking_directory=%s\n' "${render_target}" "${expected_pdf}" "$(pwd)" > "${GITHUB_WORKSPACE}/artifact/render-context.txt"
+          {
+            echo "resolved_input=${render_target}"
+            echo "expected_pdf=${expected_pdf}"
+          } >> "$GITHUB_OUTPUT"
           quarto render "${render_target}" "${extra_args[@]}" > "${GITHUB_WORKSPACE}/artifact/render.log" 2>&1
 
       - name: Capture recursive file list
@@ -269,18 +263,8 @@ jobs:
             status="failure"
           fi
 
-          expected_pdf="${{ matrix.output_pdf }}"
-          if [ -f "artifact/render-context.txt" ]; then
-            resolved_expected_pdf=$(awk -F= '$1 == "expected_pdf" { print $2 }' artifact/render-context.txt | tail -n 1)
-            if [ -n "${resolved_expected_pdf}" ]; then
-              expected_pdf="${resolved_expected_pdf}"
-            fi
-          fi
+          expected_pdf="${{ steps.render-template.outputs.expected_pdf || matrix.output_pdf }}"
           pdf_path="_template/${{ matrix.slug }}/${{ matrix.path }}/${expected_pdf}"
-          resolved_input=""
-          if [ -f "artifact/render-context.txt" ]; then
-            resolved_input=$(awk -F= '$1 == "render_target" { print $2 }' artifact/render-context.txt | tail -n 1)
-          fi
 
           if [ -f "${pdf_path}" ]; then
             cp "${pdf_path}" "artifact/${{ matrix.slug }}.pdf"
@@ -331,12 +315,6 @@ jobs:
             fi
           fi
 
-          if [ -d "_template/${{ matrix.slug }}/_site" ]; then
-            find "_template/${{ matrix.slug }}/_site" \( -type f -o -type d \) | sort > "artifact/site-files.txt"
-          else
-            printf '_site directory missing for %s\n' "${{ matrix.slug }}" > "artifact/site-files.txt"
-          fi
-
           yaml_quote() {
             printf "'%s'" "$(printf "%s" "$1" | sed "s/'/''/g")"
           }
@@ -344,30 +322,17 @@ jobs:
           cat > artifact/result.yml <<YAML
           slug: ${{ matrix.slug }}
           name: ${{ matrix.name }}
-          mode: ${{ matrix.mode }}
           repo: ${{ matrix.repo }}
           run_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          artifact_name: template-${{ matrix.slug }}
-          install_target: ${{ matrix.install_target }}
-          path: ${{ matrix.path }}
-          input: ${{ matrix.input }}
-          output_pdf: ${{ matrix.output_pdf }}
-          resolved_input: $(yaml_quote "${resolved_input}")
-          resolved_output_pdf: $(yaml_quote "${expected_pdf}")
           status: ${status}
-          materialize_outcome: ${materialize_outcome}
-          render_outcome: ${render_outcome}
           failure_class: $(yaml_quote "${failure_class}")
           failure_detail: $(yaml_quote "${failure_detail}")
-          pdf_path: $(yaml_quote "${pdf_path}")
           pdf:
           YAML
 
           {
             echo "status=${status}"
             echo "failure_class=${failure_class}"
-            echo "resolved_input=${resolved_input}"
-            echo "resolved_output_pdf=${expected_pdf}"
             echo "failure_detail<<EOF"
             printf '%s\n' "${failure_detail}"
             echo "EOF"
@@ -391,12 +356,6 @@ jobs:
           fi
           if [ -n "${{ steps.collect.outputs.failure_detail }}" ]; then
             echo "Failure detail: ${{ steps.collect.outputs.failure_detail }}"
-          fi
-          if [ -n "${{ steps.collect.outputs.resolved_input }}" ]; then
-            echo "Resolved input: ${{ steps.collect.outputs.resolved_input }}"
-          fi
-          if [ -n "${{ steps.collect.outputs.resolved_output_pdf }}" ]; then
-            echo "Expected PDF: ${{ steps.collect.outputs.resolved_output_pdf }}"
           fi
           if [ -f artifact/render-tail.log ]; then
             echo ""

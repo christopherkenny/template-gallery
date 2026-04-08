@@ -22,10 +22,6 @@ normalize_badges <- function(badges) {
   paste(sort(as.character(unlist(badges %||% character()))), collapse = "|")
 }
 
-`%||%` <- function(x, y) {
-  if (is.null(x)) y else x
-}
-
 is_quarto_extension <- function(extension) {
   identical(normalize_scalar(extension$type), "Quarto")
 }

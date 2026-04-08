@@ -6,6 +6,8 @@ meta_path <- if (length(args) >= 4) args[[4]] else "data/build-meta.yml"
 
 suppressPackageStartupMessages(library(yaml))
 
+source(file.path("scripts", "utils.R"))
+
 manifest <- yaml::read_yaml(manifest_path)
 build_results <- if (file.exists(results_path)) {
   yaml::read_yaml(results_path)
@@ -16,17 +18,6 @@ build_meta <- if (file.exists(meta_path)) yaml::read_yaml(meta_path) else list()
 
 entries <- manifest$entries
 categories <- unique(vapply(entries, function(entry) entry$category, character(1)))
-
-normalize_text <- function(x, default = "") {
-  if (is.null(x) || length(x) == 0) {
-    return(default)
-  }
-  value <- as.character(x[[1]])
-  if (!nzchar(value) || identical(value, "NA")) {
-    return(default)
-  }
-  value
-}
 
 entry_result <- function(entry) {
   build_results$results[[entry$slug]] %||% list()
@@ -61,11 +52,11 @@ status_text <- function(entry) {
     return("Missing PDF")
   }
 
-  if (!isTRUE(entry$ci$enabled %||% FALSE)) {
+  if (!is_ci_enabled(entry)) {
     return("Not enabled")
   }
 
-  normalize_text(entry$ci$reason, "Pending")
+  "Pending"
 }
 
 badge_values <- function(entry) {
@@ -160,7 +151,6 @@ make_card <- function(entry) {
 
   if (identical(state_class, "failure")) {
     run_url <- result_link(entry, "run_url")
-    artifact_name <- escape_html(normalize_text(entry_result(entry)$artifact_name))
     failure_class <- escape_html(result_value(entry, "failure_class"))
     failure_detail <- escape_html(result_value(entry, "failure_detail"))
     if (nzchar(failure_class) || nzchar(failure_detail)) {
@@ -171,9 +161,8 @@ make_card <- function(entry) {
       body_parts <- c(
         body_parts,
         sprintf(
-          "<p class=\"gallery-note\">See <a href=\"%s\">run details</a>%s.</p>",
-          run_url,
-          if (nzchar(artifact_name)) sprintf(" and artifact <code>%s</code>", artifact_name) else ""
+          "<p class=\"gallery-note\">See <a href=\"%s\">run details</a>.</p>",
+          run_url
         )
       )
     }
@@ -223,7 +212,7 @@ make_status_row <- function(entry) {
     repo_label(entry$repo),
     entry$repo,
     normalize_text(entry$engine, "n/a"),
-    if (isTRUE(entry$ci$needs_r %||% FALSE)) "yes" else "no",
+    if (isTRUE(ci_config(entry)$needs_r %||% FALSE)) "yes" else "no",
     status_text(entry),
     if (nzchar(normalize_text(result$pdf))) sprintf("[pdf](%s)", normalize_text(result$pdf)) else ""
   )

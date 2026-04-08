@@ -3,7 +3,6 @@ annual-reviews:
   kind: template
   engine: latex
   ci:
-    enabled: true
     needs_r: true
     install_target: christopherkenny/annual-reviews
     input: template.qmd
@@ -18,7 +17,6 @@ apsr:
   kind: template
   engine: latex
   ci:
-    enabled: true
     needs_r: true
     install_target: christopherkenny/apsr
     input: template.qmd
@@ -37,7 +35,6 @@ cambridge-medium:
   kind: template
   engine: latex
   ci:
-    enabled: true
     install_target: christopherkenny/cambridge-medium
     input: template.qmd
     output_pdf: template.pdf
@@ -46,7 +43,6 @@ nature:
   kind: template
   engine: latex
   ci:
-    enabled: true
     install_target: christopherkenny/nature
     input: template.qmd
     output_pdf: template.pdf
@@ -55,7 +51,6 @@ pnas:
   kind: template
   engine: latex
   ci:
-    enabled: true
     needs_r: true
     install_target: christopherkenny/pnas
     input: template.qmd
@@ -65,7 +60,6 @@ pnas-si:
   kind: template
   engine: latex
   ci:
-    enabled: true
     needs_r: true
     install_target: christopherkenny/pnas-si
     input: template.qmd
@@ -75,7 +69,6 @@ scientific-data:
   kind: template
   engine: latex
   ci:
-    enabled: true
     install_target: christopherkenny/scientific-data
     input: template.qmd
     output_pdf: template.pdf
@@ -84,7 +77,6 @@ perspectives:
   kind: template
   engine: latex
   ci:
-    enabled: true
     needs_r: true
     install_target: christopherkenny/perspectives
     input: template.qmd
@@ -97,7 +89,6 @@ oup:
   kind: template
   engine: latex
   ci:
-    enabled: true
     needs_r: true
     install_target: christopherkenny/oup
     input: template.qmd
@@ -107,7 +98,6 @@ now:
   kind: template
   engine: latex
   ci:
-    enabled: true
     needs_r: true
     install_target: christopherkenny/now
     input: template.qmd
@@ -117,7 +107,6 @@ wordcount:
   kind: filter
   engine: latex
   ci:
-    enabled: true
     needs_r: true
     install_target: christopherkenny/wordcount
     input: example.qmd
@@ -126,7 +115,6 @@ typst-function:
   slug: typst-function
   kind: filter
   ci:
-    enabled: true
     install_target: christopherkenny/typst-function
     input: example.qmd
     output_pdf: example.pdf
@@ -134,7 +122,6 @@ spellcheck:
   slug: spellcheck
   kind: filter
   ci:
-    enabled: true
     install_target: christopherkenny/spellcheck
     input: example.qmd
     output_pdf: example.pdf
@@ -142,7 +129,6 @@ typst-refs:
   slug: typst-refs
   kind: filter
   ci:
-    enabled: true
     install_target: christopherkenny/typst-refs
     input: example.qmd
     output_pdf: example.pdf
@@ -150,7 +136,6 @@ pseudocode:
   slug: pseudocode
   kind: filter
   ci:
-    enabled: true
     install_target: christopherkenny/pseudocode
     input: example.qmd
     output_pdf: example.pdf
@@ -159,7 +144,6 @@ tufte:
   kind: template
   engine: typst
   ci:
-    enabled: true
     install_target: christopherkenny/tufte
     input: tufte.qmd
     output_pdf: tufte.pdf
@@ -168,7 +152,6 @@ ctk-article:
   kind: template
   engine: typst
   ci:
-    enabled: true
     needs_r: true
     install_target: christopherkenny/ctk-article
     input: ctk-article.qmd
@@ -178,7 +161,6 @@ ctk-memo:
   kind: template
   engine: typst
   ci:
-    enabled: true
     install_target: christopherkenny/ctk-memo
     input: ctk-memo.qmd
     output_pdf: ctk-memo.pdf
@@ -187,7 +169,6 @@ ctk-syllabus:
   kind: template
   engine: typst
   ci:
-    enabled: true
     install_target: christopherkenny/ctk-syllabus
     input: ctk-syllabus.qmd
     output_pdf: ctk-syllabus.pdf
@@ -198,7 +179,6 @@ ctk-legal:
   kind: template
   engine: typst
   ci:
-    enabled: true
     install_target: christopherkenny/ctk-legal
     input: ctk-legal.qmd
     output_pdf: ctk-legal.pdf
@@ -207,7 +187,6 @@ ctk-invoice:
   kind: template
   engine: typst
   ci:
-    enabled: true
     install_target: christopherkenny/ctk-invoice
     input: template.qmd
     output_pdf: template.pdf
@@ -216,7 +195,6 @@ quarto-cv:
   kind: template
   engine: typst
   ci:
-    enabled: true
     install_target: christopherkenny/quarto-cv
     input: template.qmd
     output_pdf: template.pdf
@@ -225,7 +203,6 @@ projector:
   kind: template
   engine: typst
   ci:
-    enabled: true
     install_target: christopherkenny/projector
     input: template.qmd
     output_pdf: template.pdf
@@ -236,7 +213,6 @@ harvard-diss:
   kind: template
   engine: typst
   ci:
-    enabled: true
     install_target: christopherkenny/harvard-diss
     input: template.qmd
     output_pdf: template.pdf
