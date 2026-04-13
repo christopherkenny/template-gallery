@@ -403,17 +403,6 @@ jobs:
       - name: Merge build results
         run: Rscript scripts/merge-build-results.R artifacts data/build-results.yml assets/pdfs
 
-      - name: Generate gallery page
-        run: Rscript scripts/generate-gallery.R data/template-manifest.yml data/build-results.yml index.qmd data/build-meta.yml
-
-      - name: Write job summary
-        shell: bash
-        run: Rscript scripts/write-job-summary.R data/template-manifest.yml data/build-results.yml >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Configure GitHub Pages
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        uses: actions/configure-pages@v5
-
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
@@ -427,6 +416,17 @@ jobs:
           cat > data/build-meta.yml <<YAML
           quarto_version: "${version}"
           YAML
+
+      - name: Generate gallery page
+        run: Rscript scripts/generate-gallery.R data/template-manifest.yml data/build-results.yml index.qmd data/build-meta.yml
+
+      - name: Write job summary
+        shell: bash
+        run: Rscript scripts/write-job-summary.R data/template-manifest.yml data/build-results.yml >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Configure GitHub Pages
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v5
 
       - name: Render website
         run: quarto render .
