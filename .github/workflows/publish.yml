@@ -37,9 +37,16 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: "4.5.3"
+          use-public-rspm: true
 
       - name: Install R dependencies
-        run: Rscript -e "install.packages(c('yaml', 'jsonlite'), repos = 'https://cloud.r-project.org')"
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::yaml
+            any::jsonlite
+          install-pandoc: false
+          install-quarto: false
 
       - name: Check canonical template sync
         run: Rscript scripts/check-templates-sync.R templates.yml https://raw.githubusercontent.com/christopherkenny/christopherkenny.github.io/main/webscripts/templates.yml
@@ -73,6 +80,7 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: "4.5.3"
+          use-public-rspm: true
 
       - name: Install system libraries for R packages
         if: matrix.needs_r
@@ -94,7 +102,14 @@ jobs:
 
       - name: Install R dependencies
         if: matrix.needs_r
-        run: Rscript -e "install.packages(c('knitr', 'rmarkdown', 'ggplot2'), repos = 'https://cloud.r-project.org'); stopifnot(requireNamespace('knitr', quietly = TRUE), requireNamespace('rmarkdown', quietly = TRUE), requireNamespace('ggplot2', quietly = TRUE))"
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::knitr
+            any::rmarkdown
+            any::ggplot2
+          install-pandoc: false
+          install-quarto: false
 
       - name: Install template-specific R dependencies
         if: matrix.has_extra_r_packages
@@ -103,7 +118,7 @@ jobs:
         shell: bash
         run: |
           pkgs=$(printf '%s' "${EXTRA_R_PACKAGES_JSON}" | jq -r '.[]' | sed "s/.*/'&'/" | paste -sd, -)
-          Rscript -e "pkgs <- c(${pkgs}); install.packages(pkgs, repos = 'https://cloud.r-project.org'); stopifnot(all(vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)))"
+          Rscript -e "pkgs <- c(${pkgs}); install.packages(pkgs); stopifnot(all(vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)))"
         env:
           EXTRA_R_PACKAGES_JSON: ${{ toJson(matrix.extra_r_packages) }}
 
@@ -393,9 +408,14 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: "4.5.3"
+          use-public-rspm: true
 
       - name: Install R dependencies
-        run: Rscript -e "install.packages('yaml', repos = 'https://cloud.r-project.org')"
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: any::yaml
+          install-pandoc: false
+          install-quarto: false
 
       - name: Build manifest
         run: Rscript scripts/build-manifest.R templates.yml data/template-overrides.yml data/template-manifest.yml
