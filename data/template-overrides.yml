@@ -139,6 +139,13 @@ pseudocode:
     install_target: christopherkenny/pseudocode
     input: example.qmd
     output_pdf: example.pdf
+quarto-jot:
+  slug: jot
+  kind: filter
+  ci:
+    install_target: christopherkenny/quarto-jot
+    input: example.qmd
+    output_pdf: example.pdf
 tufte:
   slug: tufte
   kind: template
