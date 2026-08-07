@@ -109,6 +109,12 @@
       type: Quarto
       description: A general purpose template for preprints and submissions using Quarto and Typst.
       badges: ["Quarto", "Typst"]
+    - name: ctk-lecture
+      link: https://github.com/christopherkenny/ctk-lecture
+      image: https://raw.githubusercontent.com/christopherkenny/ctk-lecture/main/template_1.png
+      type: Quarto
+      description: A lecture notes template with optional hidden solutions using Quarto and Typst.
+      badges: ["Quarto", "Typst"]
     - name: ctk-memo
       link: https://github.com/christopherkenny/ctk-memo
       image: https://raw.githubusercontent.com/christopherkenny/ctk-memo/main/template_1.png

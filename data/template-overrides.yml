@@ -163,6 +163,14 @@ ctk-article:
     install_target: christopherkenny/ctk-article
     input: ctk-article.qmd
     output_pdf: ctk-article.pdf
+ctk-lecture:
+  slug: ctk-lecture
+  kind: template
+  engine: typst
+  ci:
+    install_target: christopherkenny/ctk-lecture
+    input: template.qmd
+    output_pdf: template.pdf
 ctk-memo:
   slug: ctk-memo
   kind: template

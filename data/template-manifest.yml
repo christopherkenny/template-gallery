@@ -304,6 +304,23 @@ entries:
     input: ctk-article.qmd
     output_pdf: ctk-article.pdf
     needs_r: yes
+- slug: ctk-lecture
+  name: ctk-lecture
+  category: Other templates
+  description: A lecture notes template with optional hidden solutions using Quarto
+    and Typst.
+  repo: https://github.com/christopherkenny/ctk-lecture
+  image: https://raw.githubusercontent.com/christopherkenny/ctk-lecture/main/template_1.png
+  type: Quarto
+  badges:
+  - Quarto
+  - Typst
+  kind: template
+  engine: typst
+  ci:
+    install_target: christopherkenny/ctk-lecture
+    input: template.qmd
+    output_pdf: template.pdf
 - slug: ctk-memo
   name: ctk-memo
   category: Other templates
